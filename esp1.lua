@@ -1,7 +1,7 @@
 local EspModule = {}
 
 function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
-    -- Функция цвета внутри модуля (чтобы всё работало автономно)
+    -- [[ ТВОЯ ФУНКЦИЯ ЦВЕТА ]]
     local function GetEspColor(Player, StaticColor)
         if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
             return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
@@ -23,12 +23,12 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
         return StaticColor
     end
 
-    -- Твой основной цикл обновления
+    -- [[ ТВОЙ ЦИКЛ ESP ]]
     for Player, data in pairs(Objects) do
         local Char = Player.Character
         local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
         
-        -- СБРОС ВИДИМОСТИ ПЕРЕД ПРОВЕРКОЙ
+        -- СБРОС ВИДИМОСТИ
         data.Box.Visible = false
         data.Tracer.Visible = false
         data.Name.Visible = false
