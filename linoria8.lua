@@ -131,6 +131,60 @@ MiscGroup:AddButton('Unload Script', Unload)
 MiscGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'RightControl', NoUI = true, Text = 'Menu keybind' })
 Library.ToggleKeybind = Options.MenuKeybind
 
+-- [[ ЛОГИКА ОБЪЕКТОВ ESP ]]
+local function AddPlayer(P)
+    if P == LP then return end
+    
+    local d = {}
+    d.Box = Drawing.new("Square")
+    d.Tracer = Drawing.new("Line")
+    d.HealthOutline = Drawing.new("Line")
+    d.HealthBar = Drawing.new("Line")
+    d.Name = Drawing.new("Text")
+    d.Dist = Drawing.new("Text")
+    d.HPText = Drawing.new("Text")
+    d.Highlight = Instance.new("Highlight")
+    
+    for _, txt in pairs({d.Name, d.Dist, d.HPText}) do
+        txt.Center = true
+        txt.Outline = true
+        txt.Size = 14
+        txt.Color = Color3.new(1, 1, 1)
+        txt.Visible = false
+    end
+    
+    d.Box.Visible = false
+    d.Tracer.Visible = false
+    d.HealthBar.Visible = false
+    d.HealthOutline.Visible = false
+    d.HealthOutline.Thickness = 3
+    d.HealthOutline.Color = Color3.new(0, 0, 0)
+    
+    d.Highlight.Parent = game:GetService("CoreGui")
+    d.Highlight.Enabled = false
+    
+    Objects[P] = d
+end
+
+local function RemovePlayer(P)
+    if Objects[P] then
+        local data = Objects[P]
+        if data.Box then data.Box:Remove() end
+        if data.Tracer then data.Tracer:Remove() end
+        if data.Name then data.Name:Remove() end
+        if data.Dist then data.Dist:Remove() end
+        if data.HPText then data.HPText:Remove() end
+        if data.HealthBar then data.HealthBar:Remove() end
+        if data.HealthOutline then data.HealthOutline:Remove() end
+        if data.Highlight then data.Highlight:Destroy() end
+        Objects[P] = nil
+    end
+end
+
+-- Инициализация
+for _, p in pairs(Players:GetPlayers()) do AddPlayer(p) end
+table.insert(Connections, Players.PlayerAdded:Connect(AddPlayer))
+table.insert(Connections, Players.PlayerRemoving:Connect(RemovePlayer))
 MainRenderLoop = RS.RenderStepped:Connect(function()
     -- FOV ОБНОВЛЕНИЕ
     if Toggles.ShowFOV and Options.FOVRadius then
@@ -164,3 +218,4 @@ SaveManager:BuildConfigSection(Tabs['UI Settings'])
 
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 Library:UpdateColorsUsingRegistry()
+
