@@ -1,6 +1,6 @@
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
-local AimlockModule = loadstring(game:HttpGet(baseUrl .. "aim1.lua"))()
-local EspModule = loadstring(game:HttpGet(baseUrl .. "esp1.lua"))() -- Загрузка ESP
+local AimlockModule = loadstring(game:HttpGet(baseUrl .. "aim2.lua"))()
+local EspModule = loadstring(game:HttpGet(baseUrl .. "esp2.lua"))() -- Загрузка ESP
 
 -- [[ ЗАГРУЗКА БИБЛИОТЕКИ ]]
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
@@ -218,5 +218,6 @@ SaveManager:BuildConfigSection(Tabs['UI Settings'])
 
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 Library:UpdateColorsUsingRegistry()
+
 
 
