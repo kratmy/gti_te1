@@ -203,7 +203,7 @@ MainRenderLoop = RS.RenderStepped:Connect(function()
     
     -- Вызов ESP модуля
     if EspModule and EspModule.Run then 
-        EspModule.Run(Objects, Toggles, Options, LP, Camera) 
+        EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS) 
     end
     
     -- Вызов Aimlock модуля
@@ -220,6 +220,7 @@ SaveManager:BuildConfigSection(Tabs['UI Settings'])
 
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 Library:UpdateColorsUsingRegistry()
+
 
 
 
