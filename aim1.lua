@@ -1,9 +1,6 @@
 local AimlockModule = {}
 
--- Передаем все зависимости (Options, Toggles и т.д.) внутрь функции
 function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
-    
-    -- 1. Вспомогательная функция (теперь внутри модуля)
     local function IsVisible(Part, Char)
         if not Toggles.WallCheck or not Toggles.WallCheck.Value then 
             return true 
@@ -15,7 +12,6 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
         return Res == nil
     end
 
-    -- 2. Логика проверки нажатия и поиска цели
     local AimKey = Options.AimKeybind.Value
     local IsPressed = (AimKey == 'MB2' and UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)) or 
                       (AimKey == 'MB1' and UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)) or 
