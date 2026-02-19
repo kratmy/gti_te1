@@ -1,75 +1,128 @@
 local EspModule = {}
 
-function EspModule.Run(Objects, Toggles, Options, LP, Camera)
-    local function GetEspColor(Player, StaticColor)
-        if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then return Color3.fromHSV(tick() % 5 / 5, 1, 1) end
-        if not Options.GlobalMode then return StaticColor end
-        local Mode = Options.GlobalMode.Value
-        if Mode == 'Team Color' then return Player.TeamColor.Color
-        elseif Mode == 'Friend/Enemy' then return (Player.Team == LP.Team) and Options.FriendCol.Value or Options.EnemyCol.Value end
-        return StaticColor
+-- Переносим функцию выбора цвета
+local function GetEspColor(Player, StaticColor, Toggles, Options, LP)
+    if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
+        return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
     end
+    if not Options.GlobalMode then return StaticColor end
+    
+    local Mode = Options.GlobalMode.Value
+    if Mode == 'Team Color' then 
+        return Player.TeamColor.Color
+    elseif Mode == 'Friend/Enemy' then 
+        if Player.Team == LP.Team then
+            return Options.FriendCol.Value
+        else
+            return Options.EnemyCol.Value
+        end
+    end
+    return StaticColor
+end
 
+function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
     for Player, data in pairs(Objects) do
         local Char = Player.Character
         local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
         
-        -- СБРОС (Тот самый блок из 8 строк, но короче)
-        data.Box.Visible = false; data.Tracer.Visible = false; data.Name.Visible = false; data.Dist.Visible = false
-        data.HPText.Visible = false; data.HealthBar.Visible = false; data.HealthOutline.Visible = false
-        if data.Highlight then data.Highlight.Enabled = false end
+        -- СБРОС ВИДИМОСТИ (копируем один в один)
+        data.Box.Visible = false
+        data.Tracer.Visible = false
+        data.Name.Visible = false
+        data.Dist.Visible = false
+        data.HPText.Visible = false
+        data.HealthBar.Visible = false
+        data.HealthOutline.Visible = false
+        data.Highlight.Enabled = false
 
-        if Toggles.EspEnabled and Toggles.EspEnabled.Value and Char and Hum and Hum.Health > 0 then
-            local Root = Char:FindFirstChild("HumanoidRootPart")
-            if Root then
-                local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
-                if OnS then
-                    local Color = GetEspColor(Player, Options.BoxColor.Value)
-                    local SX, SY = 2000 / Pos.Z, 3000 / Pos.Z
-                    local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
+        if Toggles.EspEnabled and Toggles.EspEnabled.Value then
+            if Char and Hum and Hum.Health > 0 then
+                local Root = Char:FindFirstChild("HumanoidRootPart")
+                if Root then
+                    local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
                     
-                    if Toggles.BoxEnabled.Value then
-                        data.Box.Visible, data.Box.Position, data.Box.Size, data.Box.Color = true, BPos, Vector2.new(SX, SY), Color
-                    end
-                    
-                    if Toggles.HealthBar.Value then
-                        local H = Hum.Health / Hum.MaxHealth
-                        local Side = Options.HealthBarSide.Value
-                        data.HealthBar.Visible, data.HealthOutline.Visible = true, Toggles.HealthOutline.Value
-                        if Side == 'Left' then
-                            data.HealthOutline.From, data.HealthOutline.To = Vector2.new(BPos.X - 5, BPos.Y + SY + 1), Vector2.new(BPos.X - 5, BPos.Y - 1)
-                            data.HealthBar.From, data.HealthBar.To = Vector2.new(BPos.X - 5, BPos.Y + SY), Vector2.new(BPos.X - 5, BPos.Y + SY - (SY * H))
-                        elseif Side == 'Right' then
-                            data.HealthOutline.From, data.HealthOutline.To = Vector2.new(BPos.X + SX + 5, BPos.Y + SY + 1), Vector2.new(BPos.X + SX + 5, BPos.Y - 1)
-                            data.HealthBar.From, data.HealthBar.To = Vector2.new(BPos.X + SX + 5, BPos.Y + SY), Vector2.new(BPos.X + SX + 5, BPos.Y + SY - (SY * H))
-                        elseif Side == 'Bottom' then
-                            data.HealthOutline.From, data.HealthOutline.To = Vector2.new(BPos.X - 1, BPos.Y + SY + 5), Vector2.new(BPos.X + SX + 1, BPos.Y + SY + 5)
-                            data.HealthBar.From, data.HealthBar.To = Vector2.new(BPos.X, BPos.Y + SY + 5), Vector2.new(BPos.X + (SX * H), BPos.Y + SY + 5)
+                    if OnS then
+                        local Color = GetEspColor(Player, Options.BoxColor.Value, Toggles, Options, LP)
+                        local SX = 2000 / Pos.Z
+                        local SY = 3000 / Pos.Z
+                        local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
+                        
+                        -- BOX
+                        if Toggles.BoxEnabled.Value then
+                            data.Box.Visible = true
+                            data.Box.Position = BPos
+                            data.Box.Size = Vector2.new(SX, SY)
+                            data.Box.Color = Color
                         end
-                        data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
-                    end
-                    
-                    if Toggles.ShowName.Value then
-                        data.Name.Visible, data.Name.Text, data.Name.Position = true, Player.Name, Vector2.new(Pos.X, BPos.Y - 16)
-                    end
-                    
-                    if Toggles.ShowDist.Value then
-                        local YOff = (Options.HealthBarSide.Value == 'Bottom') and 12 or 2
-                        data.Dist.Visible, data.Dist.Text, data.Dist.Position = true, math.floor(Pos.Z) .. "m", Vector2.new(Pos.X, BPos.Y + SY + YOff)
-                    end
-                    
-                    if Toggles.ShowHPText.Value then
-                        data.HPText.Visible, data.HPText.Text, data.HPText.Position = true, math.floor(Hum.Health) .. " HP", Vector2.new(BPos.X + SX + 20, BPos.Y + SY / 2)
-                    end
-                    
-                    if Toggles.TracerEnabled.Value then
-                        local Origin = Options.TracerOrigin.Value
-                        local FromPos = (Origin == 'Top' and Vector2.new(Camera.ViewportSize.X/2, 0)) or (Origin == 'Center' and Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)) or (Origin == 'Mouse' and game:GetService("UserInputService"):GetMouseLocation()) or Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
-                        data.Tracer.Visible, data.Tracer.From, data.Tracer.To, data.Tracer.Color = true, FromPos, Vector2.new(Pos.X, Pos.Y), GetEspColor(Player, Options.TracerColor.Value)
-                    end
-                    
-                    if Toggles.ChamsEnabled.Value then
-                        data.Highlight.Enabled, data.Highlight.Adornee, data.Highlight.FillColor, data.Highlight.FillTransparency = true, Char, GetEspColor(Player, Options.ChamsColor.Value), Options.ChamsTransp.Value
+                        
+                        -- HEALTH BAR
+                        if Toggles.HealthBar.Value then
+                            local H = Hum.Health / Hum.MaxHealth
+                            local Side = Options.HealthBarSide.Value
+                            data.HealthBar.Visible = true
+                            data.HealthOutline.Visible = Toggles.HealthOutline.Value
+                            
+                            if Side == 'Left' then
+                                data.HealthOutline.From = Vector2.new(BPos.X - 5, BPos.Y + SY + 1)
+                                data.HealthOutline.To = Vector2.new(BPos.X - 5, BPos.Y - 1)
+                                data.HealthBar.From = Vector2.new(BPos.X - 5, BPos.Y + SY)
+                                data.HealthBar.To = Vector2.new(BPos.X - 5, BPos.Y + SY - (SY * H))
+                            elseif Side == 'Right' then
+                                data.HealthOutline.From = Vector2.new(BPos.X + SX + 5, BPos.Y + SY + 1)
+                                data.HealthOutline.To = Vector2.new(BPos.X + SX + 5, BPos.Y - 1)
+                                data.HealthBar.From = Vector2.new(BPos.X + SX + 5, BPos.Y + SY)
+                                data.HealthBar.To = Vector2.new(BPos.X + SX + 5, BPos.Y + SY - (SY * H))
+                            elseif Side == 'Bottom' then
+                                data.HealthOutline.From = Vector2.new(BPos.X - 1, BPos.Y + SY + 5)
+                                data.HealthOutline.To = Vector2.new(BPos.X + SX + 1, BPos.Y + SY + 5)
+                                data.HealthBar.From = Vector2.new(BPos.X, BPos.Y + SY + 5)
+                                data.HealthBar.To = Vector2.new(BPos.X + (SX * H), BPos.Y + SY + 5)
+                            end
+                            data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
+                        end
+                        
+                        -- TEXTS (NAME, DIST, HP)
+                        if Toggles.ShowName.Value then
+                            data.Name.Visible = true
+                            data.Name.Text = Player.Name
+                            data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
+                        end
+                        
+                        if Toggles.ShowDist.Value then
+                            data.Dist.Visible = true
+                            data.Dist.Text = math.floor(Pos.Z) .. "m"
+                            local YOff = (Options.HealthBarSide.Value == 'Bottom') and 12 or 2
+                            data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + YOff)
+                        end
+                        
+                        if Toggles.ShowHPText.Value then
+                            data.HPText.Visible = true
+                            data.HPText.Text = math.floor(Hum.Health) .. " HP"
+                            data.HPText.Position = Vector2.new(BPos.X + SX + 20, BPos.Y + SY / 2)
+                        end
+                        
+                        -- TRACERS
+                        if Toggles.TracerEnabled.Value then
+                            local Origin = Options.TracerOrigin.Value
+                            local FromPos
+                            if Origin == 'Top' then FromPos = Vector2.new(Camera.ViewportSize.X / 2, 0)
+                            elseif Origin == 'Center' then FromPos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                            elseif Origin == 'Mouse' then FromPos = UIS:GetMouseLocation()
+                            else FromPos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y) end
+                            
+                            data.Tracer.Visible = true
+                            data.Tracer.From = FromPos
+                            data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
+                            data.Tracer.Color = GetEspColor(Player, Options.TracerColor.Value, Toggles, Options, LP)
+                        end
+                        
+                        -- CHAMS
+                        if Toggles.ChamsEnabled.Value then
+                            data.Highlight.Enabled = true
+                            data.Highlight.Adornee = Char
+                            data.Highlight.FillColor = GetEspColor(Player, Options.ChamsColor.Value, Toggles, Options, LP)
+                            data.Highlight.FillTransparency = Options.ChamsTransp.Value
+                        end
                     end
                 end
             end
