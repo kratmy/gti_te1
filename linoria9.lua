@@ -10,7 +10,7 @@ local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 
 -- [[ СОЗДАНИЕ ОКНА ]]
 local Window = Library:CreateWindow({
-    Title = 'linoria7.lua | aimlock | wh',
+    Title = 'linoria9.lua',
     Center = true,
     AutoShow = true,
     TabPadding = 8
@@ -218,4 +218,5 @@ SaveManager:BuildConfigSection(Tabs['UI Settings'])
 
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 Library:UpdateColorsUsingRegistry()
+
 
