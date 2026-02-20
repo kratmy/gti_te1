@@ -1,7 +1,8 @@
 -- [[ lunaris Loader ]]
-local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
+--local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 
 local actualUrls = {
+    baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/",
     main   = "lunarisV9.lua",
     aim    = "aim2.lua",
     esp    = "esp2.lua"
