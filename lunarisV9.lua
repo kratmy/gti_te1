@@ -4,13 +4,12 @@ local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
--- [[ ЗАГРУЗКА БИБЛИОТЕКИ ]]
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 
--- [[ СОЗДАНИЕ ОКНА ]]
+
 local Window = Library:CreateWindow({
     Title = 'lunarisV9.lua',
     Center = true,
@@ -37,7 +36,7 @@ local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
 
--- [[ НАПОЛНЕНИЕ: AIMLOCK ]]
+-- [[ НАПОЛНЕНИЕ AIMLOCK ]]
 AimLeft:AddToggle('AimEnabled', { Text = 'Enabled', Default = false })
 AimLeft:AddLabel('Aim keybind'):AddKeyPicker('AimKeybind', { 
     Default = 'MB2', 
@@ -54,7 +53,7 @@ AimRight:AddSlider('FOVRadius', { Text = 'Radius', Default = 150, Min = 10, Max 
 AimRight:AddToggle('RainbowFOV', { Text = 'Rainbow FOV', Default = false })
 AimRight:AddToggle('WallCheck', { Text = 'Wall Check', Default = false })
 
--- [[ НАПОЛНЕНИЕ: VISUALS ]]
+-- [[ НАПОЛНЕНИЕ VISUALS ]]
 EspMain:AddToggle('EspEnabled', { Text = 'Enabled', Default = false })
 EspMain:AddDropdown('GlobalMode', { Values = { 'Static', 'Team Color', 'Friend/Enemy' }, Default = 1, Text = 'Color Mode' })
 EspMain:AddToggle('GlobalRainbow', { Text = 'Global Rainbow ESP', Default = false })
@@ -90,26 +89,21 @@ FOV.Thickness = 1
 FOV.NumSides = 64
 FOV.Visible = false
 
--- Глобальная переменная для основного цикла
 local MainRenderLoop = nil
 
--- [[ ФУНКЦИЯ ПОЛНОЙ ВЫГРУЗКИ ]]
+-- [[ ФУНКЦИЯ ВЫГРУЗКИ ]]
 local function Unload()
-    -- 1. Сразу отключаем основной цикл отрисовки
     if MainRenderLoop then
         MainRenderLoop:Disconnect()
     end
     
-    -- 2. Отключаем остальные события (PlayerAdded и т.д.)
     for _, conn in pairs(Connections) do
         conn:Disconnect()
     end
     
-    -- 3. Удаляем FOV
     FOV.Visible = false
     FOV:Remove()
     
-    -- 4. Перебор всех игроков и ФИЗИЧЕСКОЕ удаление ESP
     for player, data in pairs(Objects) do
         if data.Box then data.Box.Visible = false data.Box:Remove() end
         if data.Tracer then data.Tracer.Visible = false data.Tracer:Remove() end
@@ -121,11 +115,9 @@ local function Unload()
         if data.Highlight then data.Highlight:Destroy() end
     end
     
-    -- 5. Очистка таблиц
     table.clear(Objects)
     table.clear(Connections)
     
-    -- 6. Выгрузка меню
     Library:Unload()
 end
 
@@ -214,16 +206,27 @@ end)
 
 -- [[ МЕНЕДЖЕРЫ ]]
 ThemeManager:SetLibrary(Library)
-SaveManager:SetLibrary(Library)
+ThemeManager:SetFolder('lunaris')
 ThemeManager:ApplyToTab(Tabs['UI Settings'])
+SaveManager:SetLibrary(Library)
+SaveManager:SetFolder('lunaris/configs')
 SaveManager:BuildConfigSection(Tabs['UI Settings'])
 
+--игнор бинда меню
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
+
+--цвит
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
-Library:UpdateColorsUsingRegistry()
+Library:UpdateColorsUsingRegistry() 
+task.spawn(function()
+    task.wait(1)
+    if Library.AccentColor ~= Color3.fromRGB(222, 0, 0) then
+        Library.AccentColor = Color3.fromRGB(222, 0, 0)
+        Library:UpdateColorsUsingRegistry()
+    end
+end)
 
-
-
-
+SaveManager:LoadAutoloadConfig()
 
 
 
