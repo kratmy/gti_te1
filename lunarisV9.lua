@@ -15,6 +15,7 @@ local Window = Library:CreateWindow({
     Center = true,
     AutoShow = true,
     TabPadding = 8
+    MenuFadeTime = 0.3
 })
 
 local Tabs = {
@@ -227,6 +228,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
