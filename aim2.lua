@@ -43,4 +43,36 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
     end
 end
 
+
+
+
+
+
+
+
+local function IsVisible(Part, Char)
+    if not Toggles.WallCheck or not Toggles.WallCheck.Value then 
+        return true 
+    end
+    local Params = RaycastParams.new()
+    Params.FilterType = Enum.RaycastFilterType.Exclude
+    Params.FilterDescendantsInstances = {LP.Character, Char, Camera}
+    
+    local Direction = (Part.Position - Camera.CFrame.Position) -- Направление до цели
+    local Res = workspace:Raycast(Camera.CFrame.Position, Direction, Params)
+    
+    if Res then
+        -- Если луч во что-то попал, аим не сработает. 
+        -- Посмотрите в консоль (F9), во что именно он попадает:
+        print("Аим заблокирован объектом: " .. Res.Instance.Name)
+        return false
+    end
+    return true
+end
+
+
+
+
+
+
 return AimlockModule
