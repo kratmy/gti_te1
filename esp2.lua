@@ -62,7 +62,7 @@ for Player, data in pairs(Objects) do
 					end
 							
 					-- TEXTS
-					if Toggles.ShowNames.Value and (not IsSelf or Toggles.SelfNameAndDist.Value) then
+					if Toggles.ShowName.Value and (not IsSelf or Toggles.SelfText.Value) then
 						data.Name.Visible = true
 						data.Name.Text = IsSelf and "YOU" or Player.Name
 						data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
