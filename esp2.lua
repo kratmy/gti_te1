@@ -54,7 +54,7 @@ for Player, data in pairs(Objects) do
 					local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 
 					-- BOX
-					if (not IsSelf and Toggles.BoxEnabled.Value) or (IsSelf and Toggles.SelfBox.Value) then
+					if Toggles.BoxEnabled.Value and (not IsSelf or Toggles.SelfBox.Value) then
 						data.Box.Visible = true
 						data.Box.Position = BPos
 						data.Box.Size = Vector2.new(SX, SY)
@@ -62,14 +62,14 @@ for Player, data in pairs(Objects) do
 					end
 							
 					-- TEXTS
-					if (not IsSelf and Toggles.ShowName.Value) or (IsSelf and Toggles.SelfText.Value) then
+					if Toggles.ShowNames.Value and (not IsSelf or Toggles.SelfNameAndDist.Value) then
 						data.Name.Visible = true
 						data.Name.Text = IsSelf and "YOU" or Player.Name
 						data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
 					end
 					
 					-- TRACERS
-					if (not IsSelf and Toggles.TracerEnabled.Value) or (IsSelf and Toggles.SelfTracers.Value) then
+					if Toggles.TracerEnabled.Value and (not IsSelf or Toggles.SelfTracers.Value) then
 						data.Tracer.Visible = true
 						data.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
 						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
@@ -77,7 +77,7 @@ for Player, data in pairs(Objects) do
 					end
 
 					-- CHAMS
-					if (not IsSelf and Toggles.ChamsEnabled.Value) or (IsSelf and Toggles.SelfChams.Value) then
+					if Toggles.ChamsEnabled.Value and (not IsSelf or Toggles.SelfChams.Value) then
 						data.Highlight.Enabled = true
 						data.Highlight.Adornee = Char
 						data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
