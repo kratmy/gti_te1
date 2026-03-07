@@ -1,7 +1,7 @@
 local EspModule = {}
 
 function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
-	-- 1. ИСПРАВЛЕННАЯ ФУНКЦИЯ ЦВЕТА (вернули Player)
+	-- 1. ФУНКЦИЯ ЦВЕТА (Исправлена ошибка 5-й строки)
 	local function GetEspColor(Player, StaticColor)
 		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
 			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
@@ -41,26 +41,24 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 		data.Highlight.Enabled = false
 		if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
-		-- ГЛАВНАЯ ПРОВЕРКА
+		-- 2. ГЛАВНАЯ ПРОВЕРКА
 		if not Toggles.EspEnabled.Value then continue end
 
 		if Char and Hum and Hum.Health > 0 then
-			-- Tracer Target (из настроек)
 			local TargetPart = Options.TracerTarget and Options.TracerTarget.Value or "HumanoidRootPart"
 			local Root = Char:FindFirstChild(TargetPart)
 			
 			if Root then
 				local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
 				if OnS then
-					-- ОПРЕДЕЛЕНИЕ ЦВЕТА (Твой или общий)
+					-- ЦВЕТ И ПАРАМЕТРЫ
 					local Color = IsSelf and Options.SelfBoxCol.Value or GetEspColor(Player, Options.BoxColor.Value)
-					
 					local SX = 2000 / Pos.Z
 					local SY = 3000 / Pos.Z
 					local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 					local Thick = Options.Thickness and Options.Thickness.Value or 1
 
-					-- BOX (Стиль: Corners/Box + Толщина)
+					-- BOX (Стиль Corners/Box + Толщина)
 					if Toggles.BoxEnabled.Value and (not IsSelf or Toggles.SelfBox.Value) then
 						if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' and data.Corners then
 							for _, l in pairs(data.Corners) do
@@ -77,7 +75,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 						end
 					end
 							
-					-- TEXTS (Имя, Дистанция, ХП Текст)
+					-- TEXTS (Имя, Дистанция, ХП Текст + Self Name & Dist)
 					if not IsSelf or (IsSelf and Toggles.SelfNameAndDist.Value) then
 						if Toggles.ShowNames.Value then
 							data.Name.Visible = true
@@ -101,11 +99,10 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 					-- TRACERS (Откуда, Цвет, Толщина)
 					if Toggles.TracerEnabled.Value and (not IsSelf or Toggles.SelfTracers.Value) then
 						local Origin = Options.Origin and Options.Origin.Value or "Bottom"
-						local TColor = IsSelf and Options.SelfTracerCol.Value or Color
 						data.Tracer.Visible = true
 						data.Tracer.From = (Origin == "Bottom" and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)) or (Origin == "Middle" and Camera.ViewportSize / 2) or Vector2.new(Camera.ViewportSize.X / 2, 0)
 						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
-						data.Tracer.Color = TColor
+						data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or Color
 						data.Tracer.Thickness = Thick
 					end
 
@@ -122,10 +119,9 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 
 					-- CHAMS (Highlights)
 					if Toggles.ChamsEnabled.Value and (not IsSelf or Toggles.SelfChams.Value) then
-						local CColor = IsSelf and Options.SelfChamsCol.Value or Color
 						data.Highlight.Enabled = true
 						data.Highlight.Adornee = Char
-						data.Highlight.FillColor = CColor
+						data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
 						data.Highlight.FillTransparency = Options.ChamsTransp.Value
 					end
 				end
