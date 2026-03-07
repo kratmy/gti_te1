@@ -136,5 +136,6 @@ for Player, data in pairs(Objects) do
 		end
 	end
 end
+end
 
 return EspModule
