@@ -34,6 +34,7 @@ local EspColors = Tabs.Visuals:AddLeftGroupbox('Colors (Friend/Enemy)')
 local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
 local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
 local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
+local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
 
@@ -76,6 +77,8 @@ EspDetails:AddToggle('ChamsEnabled', { Text = 'Chams (Highlights)', Default = fa
 EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min = 0, Max = 1, Rounding = 1 })
 EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
+
+CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value)workspace.CurrentCamera.FieldOfView = Valueend})
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
