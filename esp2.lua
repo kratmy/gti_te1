@@ -25,98 +25,111 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 
     -- [[ ТВОЙ ЦИКЛ ESP ]]
 for Player, data in pairs(Objects) do
-        local Char = Player.Character
-        local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
-        local IsSelf = (Player == LP) -- Определяем, ты ли это
+    local IsSelf = (Player == LP)
+    local Char = Player.Character
+    local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
+    
+    -- 1. СБРОС ВИДИМОСТИ (Всегда в начале цикла!)
+    data.Box.Visible = false
+    data.Tracer.Visible = false
+    data.Name.Visible = false
+    data.Dist.Visible = false
+    data.HPText.Visible = false
+    data.HealthBar.Visible = false
+    data.HealthOutline.Visible = false
+    data.Highlight.Enabled = false
+    if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
-        -- 1. СБРОС (Чистим экран перед отрисовкой)
-        data.Box.Visible = false
-        data.Tracer.Visible = false
-        data.Name.Visible = false
-        data.Dist.Visible = false
-        data.HPText.Visible = false
-        data.HealthBar.Visible = false
-        data.HealthOutline.Visible = false
-        data.Highlight.Enabled = false
-        if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
+    -- 2. ПРОВЕРКА АКТИВНОСТИ
+    local IsActive = IsSelf and Toggles.SelfEspEnabled.Value or Toggles.EspEnabled.Value
 
-        -- 2. ГЛАВНОЕ УСЛОВИЕ (Тот самый выбор: Self настройки или обычные)
-        local IsEspActive = IsSelf and Toggles.SelfEspEnabled.Value or Toggles.EspEnabled.Value
+    if IsActive and Char and Hum and Hum.Health > 0 then
+        local Root = Char:FindFirstChild("HumanoidRootPart")
+        if Root then
+            local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
+            if OnS then
+                local Color = GetEspColor(Player, Options.BoxColor.Value)
+                local SX = 2000 / Pos.Z
+                local SY = 3000 / Pos.Z
+                local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 
-        if IsEspActive and Char and Hum and Hum.Health > 0 then
-            local Root = Char:FindFirstChild("HumanoidRootPart")
-            if Root then
-                local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
-                
-                if OnS then
-                    -- Расчеты размеров бокса
-                    local Color = IsSelf and Options.SelfBoxCol.Value or GetEspColor(Player, Options.BoxColor.Value)
-                    local SX = 2000 / Pos.Z
-                    local SY = 3000 / Pos.Z
-                    local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
-                    
-                    -- [[ БОКС: FULL ИЛИ CORNERS ]]
-                    local ShowBox = IsSelf and Toggles.SelfBox.Value or Toggles.BoxEnabled.Value
-                    if ShowBox then
-                        if not IsSelf and Options.BoxType.Value == "Corners" then
-                            -- Логика отрисовки 8 линий для уголков
-                            local L = SX / 4
-                            local function draw(i, f, t)
-                                local l = data.Corners[i]
-                                l.Visible = true; l.From = f; l.To = t; l.Color = Color; l.Thickness = Options.BoxThickness.Value
-                            end
-                            -- Математика углов
-                            draw(1, BPos, BPos + Vector2.new(L, 0)) -- Левый верх
-                            draw(2, BPos, BPos + Vector2.new(0, L))
-                            draw(3, BPos + Vector2.new(SX, 0), BPos + Vector2.new(SX - L, 0)) -- Правый верх
-                            draw(4, BPos + Vector2.new(SX, 0), BPos + Vector2.new(SX, L))
-                            draw(5, BPos + Vector2.new(0, SY), BPos + Vector2.new(L, SY)) -- Левый низ
-                            draw(6, BPos + Vector2.new(0, SY), BPos + Vector2.new(0, SY - L))
-                            draw(7, BPos + Vector2.new(SX, SY), BPos + Vector2.new(SX - L, SY)) -- Правый низ
-                            draw(8, BPos + Vector2.new(SX, SY), BPos + Vector2.new(SX, SY - L))
-                        else
-                            -- Обычный полный бокс
-                            data.Box.Visible = true
-                            data.Box.Position = BPos
-                            data.Box.Size = Vector2.new(SX, SY)
-                            data.Box.Color = Color
-                            data.Box.Thickness = Options.BoxThickness.Value
-                        end
-                    end
-                    
-                    -- [[ ТРЕЙСЕРЫ С ВЫБОРОМ ЦЕЛИ ]]
-                    local ShowTracer = IsSelf and Toggles.SelfTracers.Value or Toggles.TracerEnabled.Value
-                    if ShowTracer then
-                        local TargetPart = Char:FindFirstChild(Options.TracerTarget.Value) or Root
-                        local TPos = Camera:WorldToViewportPoint(TargetPart.Position)
-                        local Origin = Options.TracerOrigin.Value
-                        local FromPos = (Origin == 'Top' and Vector2.new(Camera.ViewportSize.X/2, 0)) or 
-                                        (Origin == 'Center' and Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)) or
-                                        (Origin == 'Mouse' and UIS:GetMouseLocation()) or 
-                                        Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
+                 -- BOX
+                if Toggles.BoxEnabled.Value then
+                    data.Box.Visible = true
+                    data.Box.Position = BPos
+                    data.Box.Size = Vector2.new(SX, SY)
+                    data.Box.Color = Color
+                end
                         
-                        data.Tracer.Visible = true
-                        data.Tracer.From = FromPos
-                        data.Tracer.To = Vector2.new(TPos.X, TPos.Y)
-                        data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or GetEspColor(Player, Options.TracerColor.Value)
-                    end
-                    
-                    -- [[ ТЕКСТ: ИМЯ И ДИСТАНЦИЯ ]]
-                    local ShowText = IsSelf and Toggles.SelfText.Value or (Toggles.ShowName.Value or Toggles.ShowDist.Value)
-                    if ShowText then
-                        data.Name.Visible = true
-                        data.Name.Text = IsSelf and "[ YOU ]" or Player.Name .. " [" .. math.floor(Pos.Z) .. "m]"
-                        data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
-                    end
+                -- HEALTH BAR
+                if Toggles.HealthBar.Value then
+                    local H = Hum.Health / Hum.MaxHealth
+                    local Side = Options.HealthBarSide.Value
+                    data.HealthBar.Visible = true
+                    data.HealthOutline.Visible = Toggles.HealthOutline.Value
 
-                    -- [[ CHAMS ]]
-                    local ShowChams = IsSelf and Toggles.SelfChams.Value or Toggles.ChamsEnabled.Value
-                    if ShowChams then
-                        data.Highlight.Enabled = true
-                        data.Highlight.Adornee = Char
-                        data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
-                        data.Highlight.FillTransparency = Options.ChamsTransp.Value
+                    if Side == 'Left' then
+                        data.HealthOutline.From = Vector2.new(BPos.X - 5, BPos.Y + SY + 1)
+                        data.HealthOutline.To = Vector2.new(BPos.X - 5, BPos.Y - 1)
+                        data.HealthBar.From = Vector2.new(BPos.X - 5, BPos.Y + SY)
+                        data.HealthBar.To = Vector2.new(BPos.X - 5, BPos.Y + SY - (SY * H))
+                    elseif Side == 'Right' then
+                        data.HealthOutline.From = Vector2.new(BPos.X + SX + 5, BPos.Y + SY + 1)
+                        data.HealthOutline.To = Vector2.new(BPos.X + SX + 5, BPos.Y - 1)
+                        data.HealthBar.From = Vector2.new(BPos.X + SX + 5, BPos.Y + SY)
+                        data.HealthBar.To = Vector2.new(BPos.X + SX + 5, BPos.Y + SY - (SY * H))
+                    elseif Side == 'Bottom' then
+                        data.HealthOutline.From = Vector2.new(BPos.X - 1, BPos.Y + SY + 5)
+                        data.HealthOutline.To = Vector2.new(BPos.X + SX + 1, BPos.Y + SY + 5)
+                        data.HealthBar.From = Vector2.new(BPos.X, BPos.Y + SY + 5)
+                        data.HealthBar.To = Vector2.new(BPos.X + (SX * H), BPos.Y + SY + 5)
                     end
+                    data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
+                end
+                     -- TEXTS (NAME, DIST, HP)
+                if Toggles.ShowName.Value then
+                    data.Name.Visible = true
+                    data.Name.Text = Player.Name
+                    data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
+                end
+                
+                if Toggles.ShowDist.Value then
+                    data.Dist.Visible = true
+                    data.Dist.Text = math.floor(Pos.Z) .. "m"
+                    local YOff = (Options.HealthBarSide.Value == 'Bottom') and 12 or 2
+                    data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + YOff)
+                end
+                
+                if Toggles.ShowHPText.Value then
+                    data.HPText.Visible = true
+                    data.HPText.Text = math.floor(Hum.Health) .. " HP"
+                    data.HPText.Position = Vector2.new(BPos.X + SX + 20, BPos.Y + SY / 2)
+                end
+                
+                -- TRACERS
+                if Toggles.TracerEnabled.Value then
+                    local Origin = Options.TracerOrigin.Value
+                    local FromPos
+                    if Origin == 'Top' then 
+                        FromPos = Vector2.new(Camera.ViewportSize.X / 2, 0)
+                    elseif Origin == 'Center' then 
+                        FromPos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                    elseif Origin == 'Mouse' then 
+                        FromPos = UIS:GetMouseLocation()
+                    else 
+                        FromPos = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                    end
+                    data.Tracer.Visible = true
+                    data.Tracer.From = FromPos
+                    data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
+                    data.Tracer.Color = GetEspColor(Player, Options.TracerColor.Value)
+                end
+                    -- CHAMS (HIGHLIGHTS)
+                if Toggles.ChamsEnabled.Value then
+                    data.Highlight.Enabled = true
+                    data.Highlight.Adornee = Char
+                    data.Highlight.FillColor = GetEspColor(Player, Options.ChamsColor.Value)
+                    data.Highlight.FillTransparency = Options.ChamsTransp.Value
                 end
             end
         end
