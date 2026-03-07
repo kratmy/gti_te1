@@ -1,7 +1,17 @@
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 --local files = _G.LunarisSettings
 
-local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
+--local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
+local success, result = pcall(function()
+    return loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
+end)
+
+if success then
+    AimlockModule = result
+else
+    warn("Ошибка загрузки Aimlock: " .. tostring(result))
+end
+
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
@@ -228,6 +238,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
