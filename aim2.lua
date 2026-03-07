@@ -26,7 +26,7 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
   	 		IsPressed = UIS:IsKeyDown(Enum.KeyCode[AimKey])
 		end
 	end)
-	
+
 	if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
 			-- Если у нас уже есть цель, проверяем, жива ли она еще
 			if LockedTarget then
