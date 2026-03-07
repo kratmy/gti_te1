@@ -10,6 +10,8 @@ local actualUrls = {
 
 _G.LunarisLoader = actualUrls
 
+loadstring(game:HttpGet(baseUrl .. actualUrls.main))()
+
 local success, result = pcall(function()
     return game:HttpGet(baseUrl .. actualUrls.main)
 end)
