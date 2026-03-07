@@ -1,286 +1,137 @@
-local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
---local files = _G.LunarisSettings
+local EspModule = {}
 
-local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
-local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
-
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
-
-local DefaultFOV = workspace.CurrentCamera.FieldOfView
-
-
-local Window = Library:CreateWindow({
-	Title = 'lunarisV9.lua',
-	Center = true,
-	AutoShow = true,
-	TabPadding = 8
-})
-
-local Tabs = {
-	Main = Window:AddTab('AimLock'),
-	Visuals = Window:AddTab('Visuals'),
-	Misc = Window:AddTab('Misc'),
-	['UI Settings'] = Window:AddTab('Settings'),
-}
-
--- [[ ГРУППЫ ИНТЕРФЕЙСА ]]
-local AimLeft = Tabs.Main:AddLeftGroupbox('AimLock')
-local AimRight = Tabs.Main:AddRightGroupbox('FOV & Checks')
-
-local EspMain = Tabs.Visuals:AddLeftGroupbox('Visuals')
-local EspColors = Tabs.Visuals:AddLeftGroupbox('Colors (Friend/Enemy)')
-local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
-local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
-local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
-local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
-local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox('Self Visuals')
-
-local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
-
--- [[ НАПОЛНЕНИЕ AIMLOCK ]]
-AimLeft:AddToggle('AimEnabled', { Text = 'Enabled', Default = false })
-AimLeft:AddLabel('Aim keybind'):AddKeyPicker('AimKeybind', { 
-	Default = 'MB2', 
-	SyncToggleState = false, 
-	Mode = 'Hold', 
-	Text = 'Aimlock Keybind', 
-	NoUI = false 
-})
-AimLeft:AddSlider('AimSmooth', { Text = 'Smoothness', Default = 0.7, Min = 0.01, Max = 1, Rounding = 2 })
-AimLeft:AddDropdown('AimPart', { Values = { 'Head', 'UpperTorso', 'HumanoidRootPart' }, Default = 1, Text = 'Target Bone' })
-
-AimRight:AddToggle('ShowFOV', { Text = 'Show FOV Circle', Default = false }):AddColorPicker('FOVColor', { Default = Color3.fromRGB(255, 255, 255) })
-AimRight:AddSlider('FOVRadius', { Text = 'Radius', Default = 150, Min = 10, Max = 800, Rounding = 0 })
-AimRight:AddToggle('RainbowFOV', { Text = 'Rainbow FOV', Default = false })
-AimRight:AddToggle('WallCheck', { Text = 'Wall Check', Default = false })
-AimRight:AddToggle('AliveCheck', { Text = 'Alive Check', Default = true })
-
--- [[ НАПОЛНЕНИЕ VISUALS ]]
-EspMain:AddToggle('EspEnabled', { Text = 'Enabled', Default = false })
-EspMain:AddDropdown('GlobalMode', { Values = { 'Static', 'Team Color', 'Friend/Enemy' }, Default = 1, Text = 'Color Mode' })
-EspMain:AddToggle('GlobalRainbow', { Text = 'Global Rainbow ESP', Default = false })
-
-EspColors:AddLabel('Friend Color'):AddColorPicker('FriendCol', { Default = Color3.fromRGB(0, 255, 0) })
-EspColors:AddLabel('Enemy Color'):AddColorPicker('EnemyCol', { Default = Color3.fromRGB(222, 0, 0) })
-
-EspBoxes:AddToggle('BoxEnabled', { Text = 'Draw Boxes', Default = false }):AddColorPicker('BoxColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspBoxes:AddToggle('HealthBar', { Text = 'Health Bar', Default = false })
-EspBoxes:AddDropdown('BoxType', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
-EspBoxes:AddSlider('BoxThickness', { Text = 'Thickness', Default = 1, Min = 1, Max = 5, Rounding = 0 })
-EspBoxes:AddDropdown('HealthBarSide', { Values = { 'Left', 'Right', 'Bottom' }, Default = 1, Text = 'HP Bar Side' })
-EspBoxes:AddToggle('HealthOutline', { Text = 'HP Bar Outline', Default = true })
-
-EspText:AddToggle('ShowName', { Text = 'Show Names', Default = false })
-EspText:AddToggle('ShowDist', { Text = 'Show Distance', Default = false })
-EspText:AddToggle('ShowHPText', { Text = 'Show HP Text', Default = false })
-
-EspDetails:AddToggle('ChamsEnabled', { Text = 'Chams (Highlights)', Default = false }):AddColorPicker('ChamsColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min = 0, Max = 1, Rounding = 1 })
-EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
-EspDetails:AddDropdown('TracerTarget', { Values = { 'Head', 'HumanoidRootPart' }, Default = 2, Text = 'Tracer Target' })
-
-CameraSettings:AddToggle('ExtendFOV', { 
-    Text = 'Enable Custom FOV', 
-    Default = false, 
-    Callback = function(Value) 
-        local Camera = workspace.CurrentCamera 
-        if not Camera then return end 
-        
-        if not Value then 
-            Camera.FieldOfView = DefaultFOV or 70 
-        elseif Options.PlayerFOV then 
-            Camera.FieldOfView = Options.PlayerFOV.Value 
-        end 
-    end 
-})
-CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
-
--- [[ НАПОЛНЕНИЕ SELFESP ]]
-SelfEspGroup:AddToggle('SelfEspEnabled', { Text = 'Enable Self ESP', Default = false })
-SelfEspGroup:AddToggle('SelfChams', { Text = 'Self Chams', Default = false })
-SelfEspGroup:AddToggle('SelfTracers', { Text = 'Self Tracers', Default = false })
-SelfEspGroup:AddToggle('SelfBox', { Text = 'Self Box', Default = false })
-SelfEspGroup:AddToggle('SelfText', { Text = 'Self Name & Dist', Default = false })
-
--- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
-local Players = game:GetService("Players")
-local RS = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local LP = Players.LocalPlayer
-local Camera = workspace.CurrentCamera
-local Objects = {}
-local Connections = {}
-
-local FOV = Drawing.new("Circle")
-FOV.Thickness = 1
-FOV.NumSides = 64
-FOV.Visible = false
-
-local MainRenderLoop = nil
-
--- [[ ФУНКЦИЯ ВЫГРУЗКИ ]]
-local function Unload()
-	if workspace.CurrentCamera and DefaultFOV then
-		workspace.CurrentCamera.FieldOfView = DefaultFOV
-	end
-
-	if MainRenderLoop then
-		MainRenderLoop:Disconnect()
-	end
-	
-	for _, conn in pairs(Connections) do
-		conn:Disconnect()
-	end
-	
-	FOV.Visible = false
-	FOV:Remove()
-	
-	for player, data in pairs(Objects) do
-		if data.Box then data.Box.Visible = false data.Box:Remove() end
-		if data.Tracer then data.Tracer.Visible = false data.Tracer:Remove() end
-		if data.Name then data.Name.Visible = false data.Name:Remove() end
-		if data.Dist then data.Dist.Visible = false data.Dist:Remove() end
-		if data.HPText then data.HPText.Visible = false data.HPText:Remove() end
-		if data.HealthBar then data.HealthBar.Visible = false data.HealthBar:Remove() end
-		if data.HealthOutline then data.HealthOutline.Visible = false data.HealthOutline:Remove() end
-		if data.Highlight then data.Highlight:Destroy() end
-	end
-	
-	table.clear(Objects)
-	table.clear(Connections)
-	
-	Library:Unload()
-end
-
-MiscGroup:AddButton('Unload Script', Unload)
-MiscGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'RightControl', NoUI = true, Text = 'Menu keybind' })
-Library.ToggleKeybind = Options.MenuKeybind
-
--- [[ ЛОГИКА ОБЪЕКТОВ ESP ]]
-local function AddPlayer(P)
-	local d = {}
-	d.Corners = {}
-	for i = 1, 8 do
-		local line = Drawing.new("Line")
-		line.Thickness = 1
-		line.Visible = false
-		line.Transparency = 1
-		d.Corners[i] = line
-	end
-
-	d.Box = Drawing.new("Square")
-	d.Tracer = Drawing.new("Line")
-	d.HealthOutline = Drawing.new("Line")
-	d.HealthBar = Drawing.new("Line")
-	d.Name = Drawing.new("Text")
-	d.Dist = Drawing.new("Text")
-	d.HPText = Drawing.new("Text")
-	d.Highlight = Instance.new("Highlight")
-	
-	for _, txt in pairs({d.Name, d.Dist, d.HPText}) do
-		txt.Center = true
-		txt.Outline = true
-		txt.Size = 14
-		txt.Color = Color3.new(1, 1, 1)
-		txt.Visible = false
-	end
-	
-	d.Box.Visible = false
-	d.Tracer.Visible = false
-	d.HealthBar.Visible = false
-	d.HealthOutline.Visible = false
-	d.HealthOutline.Thickness = 3
-	d.HealthOutline.Color = Color3.new(0, 0, 0)
-	
-	d.Highlight.Parent = game:GetService("CoreGui")
-	d.Highlight.Enabled = false
-	
-	Objects[P] = d
-end
-
-local function RemovePlayer(P)
-	if Objects[P] then
-		local data = Objects[P]
-		if data.Box then data.Box:Remove() end
-		if data.Tracer then data.Tracer:Remove() end
-		if data.Name then data.Name:Remove() end
-		if data.Dist then data.Dist:Remove() end
-		if data.HPText then data.HPText:Remove() end
-		if data.HealthBar then data.HealthBar:Remove() end
-		if data.HealthOutline then data.HealthOutline:Remove() end
-		if data.Highlight then data.Highlight:Destroy() end
-		Objects[P] = nil
-	end
-end
-
--- Инициализация
-for _, p in pairs(Players:GetPlayers()) do AddPlayer(p) end
-table.insert(Connections, Players.PlayerAdded:Connect(AddPlayer))
-table.insert(Connections, Players.PlayerRemoving:Connect(RemovePlayer))
-MainRenderLoop = RS.RenderStepped:Connect(function()
-	-- FOV ОБНОВЛЕНИЕ
-	if Toggles.ShowFOV and Options.FOVRadius then
-		FOV.Visible = Toggles.ShowFOV.Value
-		FOV.Radius = Options.FOVRadius.Value
-		FOV.Position = UIS:GetMouseLocation()
+function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
+	-- 1. ИСПРАВЛЕННАЯ ФУНКЦИЯ ЦВЕТА (вернули Player)
+	local function GetEspColor(Player, StaticColor)
+		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
+			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
+		end
+		if not Options.GlobalMode or not Player then 
+			return StaticColor 
+		end
 		
-		if Toggles.RainbowFOV and Toggles.RainbowFOV.Value then
-			FOV.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
-		elseif Options.FOVColor then
-			FOV.Color = Options.FOVColor.Value
+		local Mode = Options.GlobalMode.Value
+		if Mode == 'Team Color' then 
+			return Player.TeamColor.Color
+		elseif Mode == 'Friend/Enemy' then 
+			if Player.Team == LP.Team then
+				return Options.FriendCol.Value
+			else
+				return Options.EnemyCol.Value
+			end
+		end
+		return StaticColor
+	end
+
+	if type(Objects) ~= "table" then return end
+
+	for Player, data in pairs(Objects) do
+		local IsSelf = (Player == LP)
+		local Char = Player.Character
+		local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
+		
+		-- СБРОС ВИДИМОСТИ
+		data.Box.Visible = false
+		data.Tracer.Visible = false
+		data.Name.Visible = false
+		data.Dist.Visible = false
+		data.HPText.Visible = false
+		data.HealthBar.Visible = false
+		data.HealthOutline.Visible = false
+		data.Highlight.Enabled = false
+		if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
+
+		-- ГЛАВНАЯ ПРОВЕРКА
+		if not Toggles.EspEnabled.Value then continue end
+
+		if Char and Hum and Hum.Health > 0 then
+			-- Tracer Target (из настроек)
+			local TargetPart = Options.TracerTarget and Options.TracerTarget.Value or "HumanoidRootPart"
+			local Root = Char:FindFirstChild(TargetPart)
+			
+			if Root then
+				local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
+				if OnS then
+					-- ОПРЕДЕЛЕНИЕ ЦВЕТА (Твой или общий)
+					local Color = GetEspColor(Player, Options.BoxColor.Value)
+					
+					local SX = 2000 / Pos.Z
+					local SY = 3000 / Pos.Z
+					local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
+					local Thick = Options.Thickness and Options.Thickness.Value or 1
+
+					-- BOX (Стиль: Corners/Box + Толщина)
+					if Toggles.BoxEnabled.Value and (not IsSelf or Toggles.SelfBox.Value) then
+						if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' and data.Corners then
+							for _, l in pairs(data.Corners) do
+								l.Visible = true
+								l.Color = Color
+								l.Thickness = Thick
+							end
+						else
+							data.Box.Visible = true
+							data.Box.Position = BPos
+							data.Box.Size = Vector2.new(SX, SY)
+							data.Box.Color = Color
+							data.Box.Thickness = Thick
+						end
+					end
+							
+					-- TEXTS (Имя, Дистанция, ХП Текст)
+					if not IsSelf or (IsSelf and Toggles.SelfNameAndDist.Value) then
+						if Toggles.ShowNames.Value then
+							data.Name.Visible = true
+							data.Name.Text = IsSelf and "YOU" or Player.Name
+							data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
+						end
+						
+						if Toggles.ShowDistance.Value then
+							data.Dist.Visible = true
+							data.Dist.Text = math.floor(Pos.Z) .. "m"
+							data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + 2)
+						end
+
+						if Toggles.ShowHPText.Value then
+							data.HPText.Visible = true
+							data.HPText.Text = math.floor(Hum.Health) .. " HP"
+							data.HPText.Position = Vector2.new(BPos.X + SX + 15, BPos.Y + SY/2)
+						end
+					end
+					
+					-- TRACERS (Откуда, Цвет, Толщина)
+					if Toggles.TracerEnabled.Value and (not IsSelf or Toggles.SelfTracers.Value) then
+						local Origin = Options.Origin and Options.Origin.Value or "Bottom"
+						local TColor = IsSelf and Options.SelfTracerCol.Value or Color
+						data.Tracer.Visible = true
+						data.Tracer.From = (Origin == "Bottom" and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)) or (Origin == "Middle" and Camera.ViewportSize / 2) or Vector2.new(Camera.ViewportSize.X / 2, 0)
+						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
+						data.Tracer.Color = TColor
+						data.Tracer.Thickness = Thick
+					end
+
+					-- HEALTH BAR (Только враги + Обводка)
+					if Toggles.HealthBar.Value and not IsSelf then
+						local H = Hum.Health / Hum.MaxHealth
+						data.HealthBar.Visible = true
+						data.HealthOutline.Visible = Toggles.HPBarOutline and Toggles.HPBarOutline.Value or false
+						
+						data.HealthBar.From = Vector2.new(BPos.X - 5, BPos.Y + SY)
+						data.HealthBar.To = Vector2.new(BPos.X - 5, BPos.Y + SY - (SY * H))
+						data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
+					end
+
+					-- CHAMS (Highlights)
+					if Toggles.ChamsEnabled.Value and (not IsSelf or Toggles.SelfChams.Value) then
+						local CColor = IsSelf and Options.SelfChamsCol.Value or Color
+						data.Highlight.Enabled = true
+						data.Highlight.Adornee = Char
+						data.Highlight.FillColor = CColor
+						data.Highlight.FillTransparency = Options.ChamsTransp.Value
+					end
+				end
+			end
 		end
 	end
-	
-	-- Вызов ESP модуля
-	if EspModule and EspModule.Run then 
-		EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS) 
-	end
-	
-	-- Вызов Aimlock модуля
-	if AimlockModule and AimlockModule.Run then 
-		AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS) 
-	end
-end)
+end
 
--- [[ МЕНЕДЖЕРЫ ]]
-ThemeManager:SetLibrary(Library)
-ThemeManager:SetFolder('lunaris')
-ThemeManager:ApplyToTab(Tabs['UI Settings'])
-SaveManager:SetLibrary(Library)
-SaveManager:SetFolder('lunaris/configs')
-SaveManager:BuildConfigSection(Tabs['UI Settings'])
-
---игнор бинда меню
-SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
-
---цвит
-Library.AccentColor = Color3.fromRGB(222, 0, 0)
-Library:UpdateColorsUsingRegistry() 
-task.spawn(function()
-	task.wait(1)
-	if Library.AccentColor ~= Color3.fromRGB(222, 0, 0) then
-		Library.AccentColor = Color3.fromRGB(222, 0, 0)
-		Library:UpdateColorsUsingRegistry()
-	end
-end)
-
-SaveManager:LoadAutoloadConfig()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+return EspModule
