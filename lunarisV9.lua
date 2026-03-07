@@ -1,3 +1,17 @@
+print("1. Старт лоадера")
+local success, err = pcall(function()
+    local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
+    print("2. Грузим модули...")
+    -- Закомментируй эти две строки для проверки!
+    loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
+    loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.esp))()
+    
+    print("3. Грузим UI Lib...")
+    local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
+    local Lib = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+    print("4. Библиотека загружена!")
+end)
+
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 --local files = _G.LunarisSettings
 
@@ -256,6 +270,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
