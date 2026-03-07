@@ -79,7 +79,7 @@ EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min 
 EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
 
-CameraSettings:AddToggle('ExtendFOV', { Text = 'Enable Custom FOV', Default = false, Callback = function(Value) local Camera = workspace.CurrentCamera if not Camera then return end if not Value then Camera.FieldOfView = DefaultFOV or 70 elseif Options.PlayerFOV and Options.PlayerFOV.Value then Camera.FieldOfView = Options.PlayerFOV.Value end end })
+CameraSettings:AddToggle('ExtendFOV', { Text = 'Enable Custom FOV', Default = false, Callback = function(Value) local Camera = workspace.CurrentCamera if not Camera then return end if not Value then Camera.FieldOfView = DefaultFOV or 70 elseif Options.PlayerFOV and Options.PlayerFOV.Value then Camera.FieldOfView = Options.PlayerFOV.Value end })
 CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
