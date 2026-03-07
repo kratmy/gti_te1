@@ -14,19 +14,23 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 			return Res == nil
 	end
 
-	local AimKey = (Options and Options.AimKeybind) and Options.AimKeybind.Value or 'MB2'
+	local AimKey = "MB2"
+	if Options and Options.AimKeybind then
+    	AimKey = Options.AimKeybind.Value
+	end
+	
 	local IsPressed = false
-
-	pcall(function()
-    	if AimKey == 'MB2' then
-        	IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
-		elseif AimKey == 'MB1' then
-        	IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
-      	else
-  	 		IsPressed = UIS:IsKeyDown(Enum.KeyCode[AimKey])
+	if AimKey == "MB2" then
+	    IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
+	elseif AimKey == "MB1" then
+	    IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
+	else
+	    local success, keyEnum = pcall(function() return Enum.KeyCode[AimKey] end)
+		if success then
+			IsPressed = UIS:IsKeyDown(keyEnum)
 		end
-	end)
-
+	end
+	
 	if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
 			-- Если у нас уже есть цель, проверяем, жива ли она еще
 			if LockedTarget then
