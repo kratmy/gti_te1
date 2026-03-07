@@ -85,7 +85,7 @@ for Player, data in pairs(Objects) do
 					end
 
 					-- HP (Линия и текст)
-					if (not IsSelf and Toggles.HealthBar.Value) then
+					if Toggles.HealthBar.Value and (not IsSelf and Toggles.SelfBox.Value) then
 						local H = Hum.Health / Hum.MaxHealth
 						data.HealthBar.Visible = true
 						data.HealthBar.From = Vector2.new(BPos.X - 5, BPos.Y + SY)
