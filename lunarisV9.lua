@@ -15,7 +15,7 @@ local Window = Library:CreateWindow({
     Title = 'lunarisV9.lua',
     Center = true,
     AutoShow = true,
-    TabPadding = 8
+    --TabPadding = 8
 })
 
 local Tabs = {
@@ -229,6 +229,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
