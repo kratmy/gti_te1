@@ -1,7 +1,7 @@
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 --local files = _G.LunarisSettings
 
-local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
+--local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 --local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
@@ -269,6 +269,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
