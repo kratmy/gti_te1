@@ -41,7 +41,7 @@ for Player, data in pairs(Objects) do
 	data.Highlight.Enabled = false
 	if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
-	-- 2. ГЛАВНАЯ ПРОВЕРКА (Если общий ESP выключен — ничего не рисуем)
+	-- 2. ГЛАВНАЯ ПРОВЕРКА (Enabled в самом верху)
 	if not Toggles.EspEnabled.Value then continue end
 
 	if Char and Hum and Hum.Health > 0 then
@@ -49,63 +49,66 @@ for Player, data in pairs(Objects) do
 		if Root then
 			local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
 			if OnS then
-				-- ЦВЕТ: Всегда берем общий цвет через твою функцию GetEspColor
 				local Color = GetEspColor(Player, Options.BoxColor.Value)
 				local SX = 2000 / Pos.Z
 				local SY = 3000 / Pos.Z
 				local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 
-				-- BOX (Зависит только от BoxEnabled)
+				-- BOX: Рисуем, если включены общие боксы И (это либо не я, либо я с включенным SelfBox)
 				if Toggles.BoxEnabled.Value then
-					data.Box.Visible = true
-					data.Box.Position = BPos
-					data.Box.Size = Vector2.new(SX, SY)
-					data.Box.Color = Color
+					if not IsSelf or (IsSelf and Toggles.SelfBox.Value) then
+						data.Box.Visible = true
+						data.Box.Position = BPos
+						data.Box.Size = Vector2.new(SX, SY)
+						data.Box.Color = IsSelf and Options.SelfBoxCol.Value or Color
+					end
 				end
 						
-				-- NAME & DIST (Зависит только от ShowName/ShowDist)
+				-- NAME & DIST: Рисуем, если включены общие имена И (это либо не я, либо я с включенным Self Name)
 				if Toggles.ShowName.Value then
-					data.Name.Visible = true
-					data.Name.Text = IsSelf and "YOU" or Player.Name
-					data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
-					data.Name.Color = Color
+					if not IsSelf or (IsSelf and Toggles.SelfText.Value) then
+						data.Name.Visible = true
+						data.Name.Text = IsSelf and "YOU" or Player.Name
+						data.Name.Position = Vector2.new(Pos.X, BPos.Y - 16)
+					end
 				end
 				
 				if Toggles.ShowDist.Value then
-					data.Dist.Visible = true
-					data.Dist.Text = math.floor(Pos.Z) .. "m"
-					data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + 2)
+					if not IsSelf or (IsSelf and Toggles.SelfText.Value) then
+						data.Dist.Visible = true
+						data.Dist.Text = math.floor(Pos.Z) .. "m"
+						local YOff = (Options.HealthBarSide.Value == 'Bottom') and 12 or 2
+						data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + YOff)
+					end
 				end
 				
-				-- TRACERS (Зависит только от TracerEnabled и общего цвета)
+				-- TRACERS: Рисуем, если включены общие трейсеры И (это либо не я, либо я с включенным Self Tracers)
 				if Toggles.TracerEnabled.Value then
-					data.Tracer.Visible = true
-					data.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-					data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
-					data.Tracer.Color = GetEspColor(Player, Options.TracerColor.Value)
+					if not IsSelf or (IsSelf and Toggles.SelfTracers.Value) then
+						data.Tracer.Visible = true
+						data.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
+						data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or Color
+					end
 				end
 
-				-- CHAMS (Зависит только от ChamsEnabled и общего цвета)
+				-- CHAMS: Рисуем, если включены общие чамсы И (это либо не я, либо я с включенным Self Chams)
 				if Toggles.ChamsEnabled.Value then
-					data.Highlight.Enabled = true
-					data.Highlight.Adornee = Char
-					data.Highlight.FillColor = GetEspColor(Player, Options.ChamsColor.Value)
-					data.Highlight.FillTransparency = Options.ChamsTransp.Value
+					if not IsSelf or (IsSelf and Toggles.SelfChams.Value) then
+						data.Highlight.Enabled = true
+						data.Highlight.Adornee = Char
+						data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
+						data.Highlight.FillTransparency = Options.ChamsTransp.Value
+					end
 				end
 
-				-- HP BAR & TEXT (Зависит только от основных настроек)
-				if Toggles.HealthBar.Value then
+				-- HP BAR & TEXT: (Обычно только для врагов, но работают от общих кнопок)
+				if Toggles.HealthBar.Value and not IsSelf then
 					local H = Hum.Health / Hum.MaxHealth
 					data.HealthBar.Visible = true
 					data.HealthBar.From = Vector2.new(BPos.X - 5, BPos.Y + SY)
 					data.HealthBar.To = Vector2.new(BPos.X - 5, BPos.Y + SY - (SY * H))
 					data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
-				end
-				
-				if Toggles.ShowHPText.Value then
-					data.HPText.Visible = true
-					data.HPText.Text = math.floor(Hum.Health) .. " HP"
-					data.HPText.Position = Vector2.new(BPos.X + SX + 20, BPos.Y + SY / 2)
 				end
 			end
 		end
