@@ -83,7 +83,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 							data.HealthOutline.From = Vector2.new(BPos.X - 1, BPos.Y + SY + 5)
 							data.HealthOutline.To = Vector2.new(BPos.X + SX + 1, BPos.Y + SY + 5)
 							data.HealthBar.From = Vector2.new(BPos.X, BPos.Y + SY + 5)
-							data.HealthBar.To = Vector2.new(BPos.X + (SX * H), BPos.Y + SY + 5)
+							data.HealthBar.To = Vector2.new(BPos.X + SX * H, BPos.Y + SY + 5)
 						end
 						data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
 					end
@@ -139,3 +139,4 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 end
 
 return EspModule
+
