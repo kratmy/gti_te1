@@ -101,9 +101,9 @@ CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Mi
 
 -- [[ НАПОЛНЕНИЕ SELFESP ]]
 SelfEspGroup:AddToggle('SelfEspEnabled', { Text = 'Enable Self ESP', Default = false })
-SelfEspGroup:AddToggle('SelfChams', { Text = 'Self Chams', Default = false }):AddColorPicker('SelfChamsCol', { Default = Color3.fromRGB(135, 170, 255) })
-SelfEspGroup:AddToggle('SelfTracers', { Text = 'Self Tracers', Default = false }):AddColorPicker('SelfTracerCol', { Default = Color3.fromRGB(255, 255, 255) })
-SelfEspGroup:AddToggle('SelfBox', { Text = 'Self Box', Default = false }):AddColorPicker('SelfBoxCol', { Default = Color3.fromRGB(255, 255, 255) })
+SelfEspGroup:AddToggle('SelfChams', { Text = 'Self Chams', Default = false })
+SelfEspGroup:AddToggle('SelfTracers', { Text = 'Self Tracers', Default = false })
+SelfEspGroup:AddToggle('SelfBox', { Text = 'Self Box', Default = false })
 SelfEspGroup:AddToggle('SelfText', { Text = 'Self Name & Dist', Default = false })
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
@@ -269,7 +269,6 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
-
 
 
 
