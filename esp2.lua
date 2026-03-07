@@ -58,7 +58,8 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
                     local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
                     
                     -- ОПРЕДЕЛЕНИЕ ЦВЕТА
-                    local Color = GetEspColor(Player, Options.BoxColor.Value)
+                    local Color = IsSelf and (Options.SelfBoxCol and Options.SelfBoxCol.Value or Color3.new(1,1,1)) 
+                                  or GetEspColor(Player, Options.BoxColor.Value)
                     
                     local Thick = Options.Thickness and Options.Thickness.Value or 1
 
@@ -111,7 +112,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
                                                or (Origin == "Middle" and Camera.ViewportSize / 2) 
                                                or Vector2.new(Camera.ViewportSize.X / 2, 0)
                             data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
-                            data.Tracer.Color = Color
+                            data.Tracer.Color = IsSelf and (Options.SelfTracerCol and Options.SelfTracerCol.Value or Color) or Color
                             data.Tracer.Thickness = Thick
                         end
                     end
@@ -132,7 +133,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
                         if not IsSelf or (IsSelf and Toggles.SelfChams and Toggles.SelfChams.Value) then
                             data.Highlight.Enabled = true
                             data.Highlight.Adornee = Char
-                            data.Highlight.FillColor = Color
+                            data.Highlight.FillColor = IsSelf and (Options.SelfChamsCol and Options.SelfChamsCol.Value or Color) or Color
                             data.Highlight.FillTransparency = Options.ChamsTransp and Options.ChamsTransp.Value or 0.5
                         end
                     end
