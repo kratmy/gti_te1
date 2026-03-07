@@ -2,7 +2,7 @@ local EspModule = {}
 
 function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 	-- [[ ТВОЯ ФУНКЦИЯ ЦВЕТА ]]
-	local function GetEspColor(Player, StaticColor)
+	local function GetEspColor(StaticColor)
 		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
 			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
 		end
