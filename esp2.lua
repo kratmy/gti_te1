@@ -56,7 +56,7 @@ for Player, data in pairs(Objects) do
 					if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' then
 						for _, l in pairs(data.Corners) do
 							l.Visible = true
-							l.Color = IsSelf and Options.SelfBoxCol.Value or Color
+							l.Color = Color
 							l.Thickness = Thick
 						end
 						-- Обновляем позиции углов (логика должна быть в твоем Draw-модуле)
@@ -64,7 +64,7 @@ for Player, data in pairs(Objects) do
 						data.Box.Visible = true
 						data.Box.Position = BPos
 						data.Box.Size = Vector2.new(SX, SY)
-						data.Box.Color = IsSelf and Options.SelfBoxCol.Value or Color
+						data.Box.Color = Color
 						data.Box.Thickness = Thick
 					end
 				end
@@ -96,7 +96,7 @@ for Player, data in pairs(Objects) do
 					data.Tracer.Visible = true
 					data.Tracer.From = (Origin == "Bottom" and Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)) or (Origin == "Middle" and Camera.ViewportSize / 2) or Vector2.new(Camera.ViewportSize.X / 2, 0)
 					data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
-					data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or Color
+					data.Tracer.Color = Color
 					data.Tracer.Thickness = Thick
 				end
 
@@ -117,7 +117,7 @@ for Player, data in pairs(Objects) do
 				if Toggles.ChamsEnabled.Value and (not IsSelf or Toggles.SelfChams.Value) then
 					data.Highlight.Enabled = true
 					data.Highlight.Adornee = Char
-					data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
+					data.Highlight.FillColor = Color
 					data.Highlight.FillTransparency = Options.ChamsTransp.Value
 					end
 				end
