@@ -1,26 +1,7 @@
 local EspModule = {}
 
-function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
-	-- [[ ТВОЯ ФУНКЦИЯ ЦВЕТА ]]
-	local function GetEspColor(Player, StaticColor)
-		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
-			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
-		end
-		if not Options.GlobalMode then 
-			return StaticColor 
-		end
-		
-		local Mode = Options.GlobalMode.Value
-		if Mode == 'Team Color' then 
-			return Player.TeamColor.Color
-		elseif Mode == 'Friend/Enemy' then 
-			if Player.Team == LP.Team then
-				return Options.FriendCol.Value
-			else
-				return Options.EnemyCol.Value
-			end
-		end
-		return StaticColor
+local function GetEspColor(Player, StaticColor)
+		return StaticColor or Color3.fromRGB(255, 255, 255)
 	end
 
 	-- [[ ТВОЙ ЦИКЛ ESP ]]
