@@ -2,13 +2,14 @@ local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 --local files = _G.LunarisSettings
 
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
-
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+local DefaultFOV = workspace.CurrentCamera.FieldOfView
 
 
 local Window = Library:CreateWindow({
@@ -78,7 +79,8 @@ EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min 
 EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
 
-CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end})
+CameraSettings:AddToggle('ExtendFOV', {Text = 'Enable Custom FOV', Default = false, Callback = function(Value) if not Value then workspace.CurrentCamera.FieldOfView = DefaultFOV else workspace.CurrentCamera.FieldOfView = Options.PlayerFOV.Value end end})
+CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end end})
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
@@ -98,6 +100,10 @@ local MainRenderLoop = nil
 
 -- [[ ФУНКЦИЯ ВЫГРУЗКИ ]]
 local function Unload()
+    if workspace.CurrentCamera and DefaultFOV then
+        workspace.CurrentCamera.FieldOfView = DefaultFOV
+    end
+
     if MainRenderLoop then
         MainRenderLoop:Disconnect()
     end
@@ -232,7 +238,6 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
-
 
 
 
