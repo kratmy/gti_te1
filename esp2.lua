@@ -24,6 +24,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
     end
 
     -- [[ ТВОЙ ЦИКЛ ESP ]]
+if not Objects then return end
 for Player, data in pairs(Objects) do
     local IsSelf = (Player == LP)
     local Char = Player.Character
