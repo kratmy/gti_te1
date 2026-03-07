@@ -20,9 +20,6 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
                       (pcall(function() return UIS:IsKeyDown(Enum.KeyCode[AimKey]) end) and UIS:IsKeyDown(Enum.KeyCode[AimKey]))
     
     if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
-        local Target = nil
-        local Closest = Options.FOVRadius.Value
-if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
         -- Если у нас уже есть цель, проверяем, жива ли она еще
         if LockedTarget then
             if not LockedTarget.Character or not LockedTarget.Character:FindFirstChild(Options.AimPart.Value) or not LockedTarget.Character:FindFirstChildOfClass("Humanoid") or LockedTarget.Character.Humanoid.Health <= 0 then
@@ -63,6 +60,7 @@ if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
 end
 
 return AimlockModule
+
 
 
 
