@@ -15,7 +15,15 @@ local success, result = pcall(function()
 end)
 
 if success then
-	loadstring(result)()
+    local func, err = loadstring(result)
+    if not func then 
+        warn("СИНТАКСИС В ОСНОВНОМ ФАЙЛЕ ГОВНО: " .. tostring(err)) 
+    else
+        local ok, runtimeErr = pcall(func)
+        if not ok then
+            warn("СКРИПТ СДОХ ПРИ ВЫПОЛНЕНИИ: " .. tostring(runtimeErr))
+        end
+    end
 else
-	warn("lunaris: Ошибка загрузки основного файла. Проверьте интернет или GitHub.")
+    warn("ГИТХАБ НЕ ОТВЕТИЛ")
 end
