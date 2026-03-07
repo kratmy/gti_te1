@@ -1,16 +1,7 @@
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 --local files = _G.LunarisSettings
 
---local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
-local success, result = pcall(function()
-    return loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
-end)
-
-if success then
-    AimlockModule = result
-else
-    warn("Ошибка загрузки Aimlock: " .. tostring(result))
-end
+local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
@@ -238,6 +229,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
