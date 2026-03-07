@@ -1,7 +1,7 @@
 local EspModule = {}
 
 function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
-	-- [[ ФУНКЦИЯ ЦВЕТА ]]
+	-- [[ ТВОЯ ФУНКЦИЯ ЦВЕТА ]]
 	local function GetEspColor(Player, StaticColor)
 		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
 			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
@@ -23,14 +23,14 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 		return StaticColor
 	end
 
-	-- [[ ЦИКЛ ESP ]]
+	-- [[ ТВОЙ ЦИКЛ ESP ]]
 	if type(Objects) ~= "table" then return end
 	for Player, data in pairs(Objects) do
 		local IsSelf = (Player == LP)
 		local Char = Player.Character
 		local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
 		
-		-- 1. СБРОС ВИДИМОСТИ
+		-- 1. СБРОС ВИДИМОСТИ (Всегда в начале цикла!)
 		data.Box.Visible = false
 		data.Tracer.Visible = false
 		data.Name.Visible = false
@@ -87,8 +87,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 						end
 						data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
 					end
-
-					-- TEXTS
+						-- TEXTS (NAME, DIST, HP)
 					if Toggles.ShowName.Value then
 						data.Name.Visible = true
 						data.Name.Text = Player.Name
@@ -126,18 +125,17 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
 						data.Tracer.Color = GetEspColor(Player, Options.TracerColor.Value)
 					end
-
-					-- CHAMS
+						-- CHAMS (HIGHLIGHTS)
 					if Toggles.ChamsEnabled.Value then
 						data.Highlight.Enabled = true
 						data.Highlight.Adornee = Char
 						data.Highlight.FillColor = GetEspColor(Player, Options.ChamsColor.Value)
 						data.Highlight.FillTransparency = Options.ChamsTransp.Value
 					end
-				end -- Закрывает if OnS
-			end -- Закрывает if Root
-		end -- Закрывает if IsActive
-	end -- Закрывает цикл for
-end -- Закрывает функцию EspModule.Run
+				end
+			end
+		end
+	end
+end
 
 return EspModule
