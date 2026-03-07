@@ -36,6 +36,7 @@ local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
 local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
 local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
 local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
+local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox('Self Visuals')
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
 
@@ -67,6 +68,8 @@ EspColors:AddLabel('Enemy Color'):AddColorPicker('EnemyCol', { Default = Color3.
 
 EspBoxes:AddToggle('BoxEnabled', { Text = 'Draw Boxes', Default = false }):AddColorPicker('BoxColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspBoxes:AddToggle('HealthBar', { Text = 'Health Bar', Default = false })
+EspBoxes:AddDropdown('BoxType', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
+EspBoxes:AddSlider('BoxThickness', { Text = 'Thickness', Default = 1, Min = 1, Max = 5, Rounding = 0 })
 EspBoxes:AddDropdown('HealthBarSide', { Values = { 'Left', 'Right', 'Bottom' }, Default = 1, Text = 'HP Bar Side' })
 EspBoxes:AddToggle('HealthOutline', { Text = 'HP Bar Outline', Default = true })
 
@@ -78,9 +81,17 @@ EspDetails:AddToggle('ChamsEnabled', { Text = 'Chams (Highlights)', Default = fa
 EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min = 0, Max = 1, Rounding = 1 })
 EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
+EspDetails:AddDropdown('TracerTarget', { Values = { 'Head', 'HumanoidRootPart' }, Default = 2, Text = 'Tracer Target' })
 
 CameraSettings:AddToggle('ExtendFOV', { Text = 'Enable Custom FOV', Default = false, Callback = function(Value) local Camera = workspace.CurrentCamera if not Camera then return end if not Value then Camera.FieldOfView = DefaultFOV or 70 elseif Options.PlayerFOV and Options.PlayerFOV.Value then Camera.FieldOfView = Options.PlayerFOV.Value end })
 CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
+
+-- [[ НАПОЛНЕНИЕ SELFESP ]]
+SelfEspGroup:AddToggle('SelfEspEnabled', { Text = 'Enable Self ESP', Default = false })
+SelfEspGroup:AddToggle('SelfChams', { Text = 'Self Chams', Default = false }):AddColorPicker('SelfChamsCol', { Default = Color3.fromRGB(135, 170, 255) })
+SelfEspGroup:AddToggle('SelfTracers', { Text = 'Self Tracers', Default = false }):AddColorPicker('SelfTracerCol', { Default = Color3.fromRGB(255, 255, 255) })
+SelfEspGroup:AddToggle('SelfBox', { Text = 'Self Box', Default = false }):AddColorPicker('SelfBoxCol', { Default = Color3.fromRGB(255, 255, 255) })
+SelfEspGroup:AddToggle('SelfText', { Text = 'Self Name & Dist', Default = false })
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
@@ -138,9 +149,16 @@ Library.ToggleKeybind = Options.MenuKeybind
 
 -- [[ ЛОГИКА ОБЪЕКТОВ ESP ]]
 local function AddPlayer(P)
-    if P == LP then return end
-    
     local d = {}
+    d.Corners = {}
+    for i = 1, 8 do
+        local line = Drawing.new("Line")
+        line.Thickness = 1
+        line.Visible = false
+        line.Transparency = 1
+        d.Corners[i] = line
+    end
+
     d.Box = Drawing.new("Square")
     d.Tracer = Drawing.new("Line")
     d.HealthOutline = Drawing.new("Line")
