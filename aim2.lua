@@ -48,7 +48,6 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
           local MousePos = UIS:GetMouseLocation()
           
           for _, p in pairs(Players:GetPlayers()) do
-          print("Цикл пошел, проверяю игрока:", p.Name)
               if p ~= LP and p.Character and p.Character:FindFirstChild(Options.AimPart.Value) then
                   local Hum = p.Character:FindFirstChildOfClass("Humanoid")
                   local canTarget = true
@@ -86,6 +85,7 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 end
 
 return AimlockModule
+
 
 
 
