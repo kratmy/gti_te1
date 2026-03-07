@@ -41,7 +41,7 @@ for Player, data in pairs(Objects) do
 	data.Highlight.Enabled = false
 	if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
-	-- 2. ГЛАВНАЯ ПРОВЕРКА (Enabled в самом верху)
+	-- 2. ГЛАВНЫЙ ВЫКЛЮЧАТЕЛЬ (Enabled)
 	if not Toggles.EspEnabled.Value then continue end
 
 	if Char and Hum and Hum.Health > 0 then
@@ -54,7 +54,7 @@ for Player, data in pairs(Objects) do
 				local SY = 3000 / Pos.Z
 				local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 
-				-- BOX: Рисуем, если включены общие боксы И (это либо не я, либо я с включенным SelfBox)
+				-- BOX (Зависит от Draw Boxes + Self Box для тебя)
 				if Toggles.BoxEnabled.Value then
 					if not IsSelf or (IsSelf and Toggles.SelfBox.Value) then
 						data.Box.Visible = true
@@ -64,7 +64,7 @@ for Player, data in pairs(Objects) do
 					end
 				end
 						
-				-- NAME & DIST: Рисуем, если включены общие имена И (это либо не я, либо я с включенным Self Name)
+				-- NAME & DIST (Зависит от Show Names + Self Name & Dist для тебя)
 				if Toggles.ShowName.Value then
 					if not IsSelf or (IsSelf and Toggles.SelfText.Value) then
 						data.Name.Visible = true
@@ -81,28 +81,37 @@ for Player, data in pairs(Objects) do
 						data.Dist.Position = Vector2.new(Pos.X, BPos.Y + SY + YOff)
 					end
 				end
+
+				-- HP TEXT (Зависит от Show HP Text)
+				if Toggles.ShowHPText.Value then
+					if not IsSelf or (IsSelf and Toggles.SelfText.Value) then
+						data.HPText.Visible = true
+						data.HPText.Text = math.floor(Hum.Health) .. " HP"
+						data.HPText.Position = Vector2.new(BPos.X + SX + 20, BPos.Y + SY / 2)
+					end
+				end
 				
-				-- TRACERS: Рисуем, если включены общие трейсеры И (это либо не я, либо я с включенным Self Tracers)
+				-- TRACERS (Зависит от Tracers + Self Tracers для тебя)
 				if Toggles.TracerEnabled.Value then
 					if not IsSelf or (IsSelf and Toggles.SelfTracers.Value) then
 						data.Tracer.Visible = true
 						data.Tracer.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
 						data.Tracer.To = Vector2.new(Pos.X, Pos.Y)
-						data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or Color
+						data.Tracer.Color = IsSelf and Options.SelfTracerCol.Value or GetEspColor(Player, Options.TracerColor.Value)
 					end
 				end
 
-				-- CHAMS: Рисуем, если включены общие чамсы И (это либо не я, либо я с включенным Self Chams)
+				-- CHAMS (Зависит от Chams (Highlights) + Self Chams для тебя)
 				if Toggles.ChamsEnabled.Value then
 					if not IsSelf or (IsSelf and Toggles.SelfChams.Value) then
 						data.Highlight.Enabled = true
 						data.Highlight.Adornee = Char
-						data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or Color
+						data.Highlight.FillColor = IsSelf and Options.SelfChamsCol.Value or GetEspColor(Player, Options.ChamsColor.Value)
 						data.Highlight.FillTransparency = Options.ChamsTransp.Value
 					end
 				end
 
-				-- HP BAR & TEXT: (Обычно только для врагов, но работают от общих кнопок)
+				-- HEALTH BAR (Только для других игроков)
 				if Toggles.HealthBar.Value and not IsSelf then
 					local H = Hum.Health / Hum.MaxHealth
 					data.HealthBar.Visible = true
