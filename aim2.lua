@@ -60,14 +60,9 @@ if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
     else
         LockedTarget = nil -- Сбрасываем цель, когда отпускаем кнопку
     end
-        
-        if Target then 
-            local TargetPart = Target.Character[Options.AimPart.Value]
-            Camera.CFrame = Camera.CFrame:Lerp(CFrame.new(Camera.CFrame.Position, TargetPart.Position), Options.AimSmooth.Value) 
-        end
-    end
 end
 
 return AimlockModule
+
 
 
