@@ -7,11 +7,23 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 		if not Toggles.WallCheck or not Toggles.WallCheck.Value then 
 			return true 
 		end
-			local Params = RaycastParams.new()
-			Params.FilterType = Enum.RaycastFilterType.Exclude
-			Params.FilterDescendantsInstances = {LP.Character, Char, Camera}
-			local Res = workspace:Raycast(Camera.CFrame.Position, (Part.Position - Camera.CFrame.Position).Unit * 500, Params)
-			return Res == nil
+		
+		local RayOrigin = Camera.CFrame.Position
+		local RayDirection = (Part.Position - RayOrigin)
+		
+		local Params = RaycastParams.new()
+
+		Params.FilterType = Enum.RaycastFilterType.Exclude
+		Params.FilterDescendantsInstances = {LP.Character, Char, Camera}
+		Params.IgnoreWater = true
+
+		local Res = workspace:Raycast(RayOrigin, RayDirection, Params)
+		
+		if not Res then
+			return true
+		end
+		
+		return Res.Instance:IsDescendantOf(Char)
 	end
 
 	local AimKey = "MB2"
