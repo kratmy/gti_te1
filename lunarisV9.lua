@@ -52,6 +52,7 @@ AimRight:AddToggle('ShowFOV', { Text = 'Show FOV Circle', Default = false }):Add
 AimRight:AddSlider('FOVRadius', { Text = 'Radius', Default = 150, Min = 10, Max = 800, Rounding = 0 })
 AimRight:AddToggle('RainbowFOV', { Text = 'Rainbow FOV', Default = false })
 AimRight:AddToggle('WallCheck', { Text = 'Wall Check', Default = false })
+AimRight:AddToggle('AliveCheck', { Text = 'Alive Check', Default = true })
 
 -- [[ НАПОЛНЕНИЕ VISUALS ]]
 EspMain:AddToggle('EspEnabled', { Text = 'Enabled', Default = false })
@@ -227,6 +228,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
