@@ -4,7 +4,7 @@ local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
 local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
@@ -256,8 +256,6 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
-
-
 
 
 
