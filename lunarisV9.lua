@@ -35,7 +35,7 @@ local EspColors = Tabs.Visuals:AddLeftGroupbox('Colors (Friend/Enemy)')
 local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
 local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
 local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
-local CameraSettings = Tabs.Visuals:AddLeftGroupbox('Camera')
+local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
 local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox('Self Visuals')
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
@@ -269,6 +269,7 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
+
 
 
 
