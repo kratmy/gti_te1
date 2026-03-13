@@ -35,7 +35,7 @@ local EspColors = Tabs.Visuals:AddLeftGroupbox('Colors (Friend/Enemy)')
 local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
 local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
 local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
-local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
+local CameraSettings = Tabs.Visuals:AddLeftGroupbox('Camera')
 local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox('Self Visuals')
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
@@ -68,7 +68,7 @@ EspColors:AddLabel('Enemy Color'):AddColorPicker('EnemyCol', { Default = Color3.
 
 EspBoxes:AddToggle('BoxEnabled', { Text = 'Draw Boxes', Default = false }):AddColorPicker('BoxColor', { Default = Color3.fromRGB(255, 255, 255) })
 EspBoxes:AddToggle('HealthBar', { Text = 'Health Bar', Default = false })
-EspBoxes:AddDropdown('BoxType', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
+EspBoxes:AddDropdown('BoxStyle', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
 EspBoxes:AddSlider('BoxThickness', { Text = 'Thickness', Default = 1, Min = 1, Max = 5, Rounding = 0 })
 EspBoxes:AddDropdown('HealthBarSide', { Values = { 'Left', 'Right', 'Bottom' }, Default = 1, Text = 'HP Bar Side' })
 EspBoxes:AddToggle('HealthOutline', { Text = 'HP Bar Outline', Default = true })
@@ -84,18 +84,18 @@ EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', '
 EspDetails:AddDropdown('TracerTarget', { Values = { 'Head', 'HumanoidRootPart' }, Default = 2, Text = 'Tracer Target' })
 
 CameraSettings:AddToggle('ExtendFOV', { 
-    Text = 'Enable Custom FOV', 
-    Default = false, 
-    Callback = function(Value) 
-        local Camera = workspace.CurrentCamera 
-        if not Camera then return end 
-        
-        if not Value then 
-            Camera.FieldOfView = DefaultFOV or 70 
-        elseif Options.PlayerFOV then 
-            Camera.FieldOfView = Options.PlayerFOV.Value 
-        end 
-    end 
+	Text = 'Enable Custom FOV', 
+	Default = false, 
+	Callback = function(Value) 
+		local Camera = workspace.CurrentCamera 
+		if not Camera then return end 
+		
+		if not Value then 
+			Camera.FieldOfView = DefaultFOV or 70 
+		elseif Options.PlayerFOV then 
+			Camera.FieldOfView = Options.PlayerFOV.Value 
+		end 
+	end 
 })
 CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
 
