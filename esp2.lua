@@ -67,22 +67,33 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 					if Toggles.BoxEnabled and Toggles.BoxEnabled.Value then
 						if not IsSelf or (IsSelf and Toggles.SelfBox and Toggles.SelfBox.Value) then
 							if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' and data.Corners then
-								for _, l in pairs(data.Corners) do
-									l.Visible = true
-									l.Color = Color
-									l.Thickness = Thick
+								
+								local LineLen = SX / 4 -- длина
+								local Corners = data.Corners
+
+								-- Top Left
+								Corners[1].From = BPos; Corners[1].To = BPos + Vector2.new(LineLen, 0)
+								Corners[2].From = BPos; Corners[2].To = BPos + Vector2.new(0, LineLen)
+								-- Top Right
+								Corners[3].From = BPos + Vector2.new(SX, 0); Corners[3].To = BPos + Vector2.new(SX - LineLen, 0)
+								Corners[4].From = BPos + Vector2.new(SX, 0); Corners[4].To = BPos + Vector2.new(SX, LineLen)
+								-- Bottom Left
+								Corners[5].From = BPos + Vector2.new(0, SY); Corners[5].To = BPos + Vector2.new(LineLen, SY)
+								Corners[6].From = BPos + Vector2.new(0, SY); Corners[6].To = BPos + Vector2.new(0, SY - LineLen)
+								-- Bottom Right
+								Corners[7].From = BPos + Vector2.new(SX, SY); Corners[7].To = BPos + Vector2.new(SX - LineLen, SY)
+								Corners[8].From = BPos + Vector2.new(SX, SY); Corners[8].To = BPos + Vector2.new(SX, SY - LineLen)
+
+								for i = 1, 8 do
+									Corners[i].Visible = true
+									Corners[i].Color = Color
+									Corners[i].Thickness = Thick
 								end
-							else
-								data.Box.Visible = true
-								data.Box.Position = BPos
-								data.Box.Size = Vector2.new(SX, SY)
-								data.Box.Color = Color
-								data.Box.Thickness = Thick
 							end
 						end
 					end
 					
-					-- TEXTS (Имя, Дистанция, ХП)
+					-- TEXT
 					if not IsSelf or (IsSelf and Toggles.SelfText and Toggles.SelfText.Value) then
 						if Toggles.ShowName and Toggles.ShowName.Value then
 							data.Name.Visible = true
@@ -132,10 +143,21 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 						data.HealthBar.Visible = true
 						data.HPBarOutline.Visible = Toggles.HPBarOutline and Toggles.HPBarOutline.Value or false
 						
-						local barX = (Side == "Left") and (BPos.X - 5) or (BPos.X + SX + 5)
-	
-						data.HealthBar.From = Vector2.new(barX, BPos.Y + SY)
-						data.HealthBar.To = Vector2.new(barX, BPos.Y + SY - (SY * H))
+						local barX, barY_From, barY_To
+						
+						if Side == "Left" then
+							barX = BPos.X - 5
+							data.HealthBar.From = Vector2.new(barX, BPos.Y + SY)
+							data.HealthBar.To = Vector2.new(barX, BPos.Y + SY - (SY * H))
+						elseif Side == "Right" then
+							barX = BPos.X + SX + 5
+							data.HealthBar.From = Vector2.new(barX, BPos.Y + SY)
+							data.HealthBar.To = Vector2.new(barX, BPos.Y + SY - (SY * H))
+						elseif Side == "Bottom" then
+							data.HealthBar.From = Vector2.new(BPos.X, BPos.Y + SY + 5)
+							data.HealthBar.To = Vector2.new(BPos.X + (SX * H), BPos.Y + SY + 5)
+						end
+						
 						data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
 						
 						if data.HPBarOutline.Visible then
