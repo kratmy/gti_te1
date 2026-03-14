@@ -67,10 +67,8 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 					if Toggles.BoxEnabled and Toggles.BoxEnabled.Value then
 						if not IsSelf or (IsSelf and Toggles.SelfBox and Toggles.SelfBox.Value) then
 							if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' and data.Corners then
-								
 								local LineLen = SX / 4 -- длина
 								local Corners = data.Corners
-
 								-- Top Left
 								Corners[1].From = BPos; Corners[1].To = BPos + Vector2.new(LineLen, 0)
 								Corners[2].From = BPos; Corners[2].To = BPos + Vector2.new(0, LineLen)
@@ -89,6 +87,12 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 									Corners[i].Color = Color
 									Corners[i].Thickness = Thick
 								end
+							else
+								data.Box.Visible = true
+								data.Box.Position = BPos
+								data.Box.Size = Vector2.new(SX, SY)
+								data.Box.Color = Color
+								data.Box.Thickness = Thick
 							end
 						end
 					end
