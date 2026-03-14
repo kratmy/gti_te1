@@ -147,6 +147,7 @@ local function Unload()
 		if data.HPText then data.HPText.Visible = false data.HPText:Remove() end
 		if data.HealthBar then data.HealthBar.Visible = false data.HealthBar:Remove() end
 		if data.HPBarOutline then data.HPBarOutline.Visible = false data.HPBarOutline:Remove() end
+		if data.Corners then for i = 1, 8 do if data.Corners[i] then data.Corners[i]:Remove() end end end
 		if data.Highlight then data.Highlight:Destroy() end
 	end
 	
