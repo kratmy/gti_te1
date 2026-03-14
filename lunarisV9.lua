@@ -213,6 +213,7 @@ local function RemovePlayer(P)
 		if data.HPText then data.HPText:Remove() end
 		if data.HealthBar then data.HealthBar:Remove() end
 		if data.HPBarOutline then data.HPBarOutline:Remove() end
+		if data.Corners then for i = 1, 8 do if data.Corners[i] then data.Corners[i]:Remove() end end end
 		if data.Highlight then data.Highlight:Destroy() end
 		Objects[P] = nil
 	end
