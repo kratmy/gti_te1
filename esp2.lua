@@ -37,7 +37,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 		data.Dist.Visible = false
 		data.HPText.Visible = false
 		data.HealthBar.Visible = false
-		data.HealthOutline.Visible = false
+		data.HPBarOutline.Visible = false
 		data.Highlight.Enabled = false
 		if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
@@ -83,7 +83,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 					end
 					
 					-- TEXTS (Имя, Дистанция, ХП)
-					if not IsSelf or (IsSelf and Toggles.SelfNameAndDist and Toggles.SelfNameAndDist.Value) then
+					if not IsSelf or (IsSelf and Toggles.SelfText and Toggles.SelfText.Value) then
 						if Toggles.ShowName and Toggles.ShowName.Value then
 							data.Name.Visible = true
 							data.Name.Text = IsSelf and "YOU" or Player.Name
@@ -127,9 +127,10 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 
 					-- HEALTH BAR
 					if Toggles.HealthBar and Toggles.HealthBar.Value and not IsSelf then
+						local Side = Options.HealthBarSide and Options.HealthBarSide.Value or "Left"
 						local H = Hum.Health / Hum.MaxHealth
 						data.HealthBar.Visible = true
-						data.HealthOutline.Visible = Toggles.HPBarOutline and Toggles.HPBarOutline.Value or false
+						data.HPBarOutline.Visible = Toggles.HPBarOutline and Toggles.HPBarOutline.Value or false
 						
 						local barX = (Side == "Left") and (BPos.X - 5) or (BPos.X + SX + 5)
 	
@@ -137,9 +138,9 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 						data.HealthBar.To = Vector2.new(barX, BPos.Y + SY - (SY * H))
 						data.HealthBar.Color = Color3.new(1,0,0):Lerp(Color3.new(0,1,0), H)
 						
-						if data.HealthOutline.Visible then
-							data.HealthOutline.From = data.HealthBar.From
-							data.HealthOutline.To = data.HealthBar.To
+						if data.HPBarOutline.Visible then
+							data.HPBarOutline.From = data.HealthBar.From
+							data.HPBarOutline.To = data.HealthBar.To
 						end
 					end
 
