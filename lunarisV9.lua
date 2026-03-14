@@ -71,7 +71,7 @@ EspBoxes:AddToggle('HealthBar', { Text = 'Health Bar', Default = false })
 EspBoxes:AddDropdown('BoxStyle', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
 EspBoxes:AddSlider('BoxThickness', { Text = 'Thickness', Default = 1, Min = 1, Max = 5, Rounding = 0 })
 EspBoxes:AddDropdown('HealthBarSide', { Values = { 'Left', 'Right', 'Bottom' }, Default = 1, Text = 'HP Bar Side' })
-EspBoxes:AddToggle('HealthOutline', { Text = 'HP Bar Outline', Default = true })
+EspBoxes:AddToggle('HPBarOutline', { Text = 'HP Bar Outline', Default = true })
 
 EspText:AddToggle('ShowName', { Text = 'Show Names', Default = false })
 EspText:AddToggle('ShowDist', { Text = 'Show Distance', Default = false })
@@ -146,7 +146,7 @@ local function Unload()
 		if data.Dist then data.Dist.Visible = false data.Dist:Remove() end
 		if data.HPText then data.HPText.Visible = false data.HPText:Remove() end
 		if data.HealthBar then data.HealthBar.Visible = false data.HealthBar:Remove() end
-		if data.HealthOutline then data.HealthOutline.Visible = false data.HealthOutline:Remove() end
+		if data.HPBarOutline then data.HPBarOutline.Visible = false data.HPBarOutline:Remove() end
 		if data.Highlight then data.Highlight:Destroy() end
 	end
 	
@@ -174,7 +174,7 @@ local function AddPlayer(P)
 
 	d.Box = Drawing.new("Square")
 	d.Tracer = Drawing.new("Line")
-	d.HealthOutline = Drawing.new("Line")
+	d.HPBarOutline = Drawing.new("Line")
 	d.HealthBar = Drawing.new("Line")
 	d.Name = Drawing.new("Text")
 	d.Dist = Drawing.new("Text")
@@ -192,9 +192,9 @@ local function AddPlayer(P)
 	d.Box.Visible = false
 	d.Tracer.Visible = false
 	d.HealthBar.Visible = false
-	d.HealthOutline.Visible = false
-	d.HealthOutline.Thickness = 3
-	d.HealthOutline.Color = Color3.new(0, 0, 0)
+	d.HPBarOutline.Visible = false
+	d.HPBarOutline.Thickness = 3
+	d.HPBarOutline.Color = Color3.new(0, 0, 0)
 	
 	d.Highlight.Parent = game:GetService("CoreGui")
 	d.Highlight.Enabled = false
@@ -211,7 +211,7 @@ local function RemovePlayer(P)
 		if data.Dist then data.Dist:Remove() end
 		if data.HPText then data.HPText:Remove() end
 		if data.HealthBar then data.HealthBar:Remove() end
-		if data.HealthOutline then data.HealthOutline:Remove() end
+		if data.HPBarOutline then data.HPBarOutline:Remove() end
 		if data.Highlight then data.Highlight:Destroy() end
 		Objects[P] = nil
 	end
@@ -269,7 +269,6 @@ task.spawn(function()
 end)
 
 SaveManager:LoadAutoloadConfig()
-
 
 
 
