@@ -4,15 +4,17 @@ local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+local LibLibRepo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
+local Library = loadstring(game:HttpGet(LibRepo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(LibRepo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(LibRepo .. "addons/SaveManager.lua"))()
 
 local DefaultFOV = workspace.CurrentCamera.FieldOfView
 _G.Library = Library
 
 local Window = Library:CreateWindow({
-	Title = PrntVer .. "lun222222arisV10.lua",
+	Title = PrntVer .. "lunarisV10.lua",
 	Center = true,
 	AutoShow = true,
 })
