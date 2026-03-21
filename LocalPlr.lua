@@ -11,9 +11,11 @@ setreadonly(mt, false)
 mt.__newindex = newcclosure(function(t, k, v)
     if not checkcaller() and t:IsA("Humanoid") then
         if k == "WalkSpeed" and _G.Toggles and _G.Toggles.EnableWS and _G.Toggles.EnableWS.Value == true then
-            return
+            if v == GameWS then return oldNewIndex(t, k, v) end 
+            return 
         elseif k == "JumpPower" and _G.Toggles and _G.Toggles.EnableJP and _G.Toggles.EnableJP.Value == true then
-            return
+            if v == GameJP then return oldNewIndex(t, k, v) end
+            return 
         end
     end
     return oldNewIndex(t, k, v)
