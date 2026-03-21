@@ -10,10 +10,10 @@ setreadonly(mt, false)
 
 mt.__newindex = newcclosure(function(t, k, v)
     if not checkcaller() and t:IsA("Humanoid") then
-        if k == "WalkSpeed" and _G.Toggles and _G.Toggles.EnableWS and _G.Toggles.EnableWS.Value then
-            return -- Игра пытается поставить свою скорость? Игнорируем.
-        elseif k == "JumpPower" and _G.Toggles and _G.Toggles.EnableJP and _G.Toggles.EnableJP.Value then
-            return -- Игра пытается поставить свой прыжок? Игнорируем.
+        if k == "WalkSpeed" and _G.Toggles and _G.Toggles.EnableWS and _G.Toggles.EnableWS.Value == true then
+            return
+        elseif k == "JumpPower" and _G.Toggles and _G.Toggles.EnableJP and _G.Toggles.EnableJP.Value == true then
+            return
         end
     end
     return oldNewIndex(t, k, v)
