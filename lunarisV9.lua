@@ -11,7 +11,6 @@ local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 
 local DefaultFOV = workspace.CurrentCamera.FieldOfView
 
-
 local Window = Library:CreateWindow({
 	Title = 'lunarisV9.lua',
 	Center = true,
@@ -42,12 +41,12 @@ local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
 
 -- [[ НАПОЛНЕНИЕ AIMLOCK ]]
 AimLeft:AddToggle('AimEnabled', { Text = 'Enabled', Default = false })
-AimLeft:AddLabel('Aim keybind'):AddKeyPicker('AimKeybind', { 
-	Default = 'MB2', 
-	SyncToggleState = false, 
-	Mode = 'Hold', 
-	Text = 'Aimlock Keybind', 
-	NoUI = false 
+AimLeft:AddLabel('Aim keybind'):AddKeyPicker('AimKeybind', {
+	Default = 'MB2',
+	SyncToggleState = false,
+	Mode = 'Hold',
+	Text = 'Aimlock Keybind',
+	NoUI = false
 })
 AimLeft:AddSlider('AimSmooth', { Text = 'Smoothness', Default = 0.7, Min = 0.01, Max = 1, Rounding = 2 })
 AimLeft:AddDropdown('AimPart', { Values = { 'Head', 'UpperTorso', 'HumanoidRootPart' }, Default = 1, Text = 'Target Bone' })
@@ -83,19 +82,19 @@ EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):Add
 EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
 EspDetails:AddDropdown('TracerTarget', { Values = { 'Head', 'HumanoidRootPart' }, Default = 2, Text = 'Tracer Target' })
 
-CameraSettings:AddToggle('ExtendFOV', { 
-	Text = 'Enable Custom FOV', 
-	Default = false, 
-	Callback = function(Value) 
-		local Camera = workspace.CurrentCamera 
-		if not Camera then return end 
+CameraSettings:AddToggle('ExtendFOV', {
+	Text = 'Enable Custom FOV',
+	Default = false,
+	Callback = function(Value)
+		local Camera = workspace.CurrentCamera
+		if not Camera then return end
 		
-		if not Value then 
-			Camera.FieldOfView = DefaultFOV or 70 
-		elseif Options.PlayerFOV then 
-			Camera.FieldOfView = Options.PlayerFOV.Value 
-		end 
-	end 
+		if not Value then
+			Camera.FieldOfView = DefaultFOV or 70
+		elseif Options.PlayerFOV then
+			Camera.FieldOfView = Options.PlayerFOV.Value
+		end
+	end
 })
 CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
 
@@ -238,13 +237,13 @@ MainRenderLoop = RS.RenderStepped:Connect(function()
 	end
 	
 	-- Вызов ESP модуля
-	if EspModule and EspModule.Run then 
-		EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS) 
+	if EspModule and EspModule.Run then
+		EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 	end
 	
 	-- Вызов Aimlock модуля
 	if AimlockModule and AimlockModule.Run then 
-		AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS) 
+		AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 	end
 end)
 
@@ -260,7 +259,7 @@ SaveManager:BuildConfigSection(Tabs['UI Settings'])
 SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
 
 --цвит
-Library.AccentColor = Color3.fromRGB(222, 0, 0)
+--[[ Library.AccentColor = Color3.fromRGB(222, 0, 0)
 Library:UpdateColorsUsingRegistry() 
 task.spawn(function()
 	task.wait(1)
@@ -270,7 +269,17 @@ task.spawn(function()
 	end
 end)
 
-SaveManager:LoadAutoloadConfig()
+SaveManager:LoadAutoloadConfig() ]]
+
+Library.AccentColor = Color3.fromHex("d70000")
+Library:UpdateColorsUsingRegistry()
+
+task.spawn(function()
+    task.wait(0.5)
+    if ThemeManager then
+        ThemeManager:ApplyTheme('Default')
+    end
+end)
 
 
 
