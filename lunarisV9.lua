@@ -15,7 +15,7 @@ local Window = Library:CreateWindow({
 	Title = 'lunarisV9.lua',
 	Center = true,
 	AutoShow = true,
-	TabPadding = 8
+	--TabPadding = 8
 })
 
 local Tabs = {
@@ -274,12 +274,12 @@ SaveManager:LoadAutoloadConfig() ]]
 Library.AccentColor = Color3.fromHex("d70000")
 Library:UpdateColorsUsingRegistry()
 
-task.spawn(function()
+--[[ task.spawn(function()
     task.wait(0.5)
     if ThemeManager then
         ThemeManager:ApplyTheme('Default')
     end
-end)
+end) ]]
 
 
 
