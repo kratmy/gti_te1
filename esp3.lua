@@ -1,7 +1,7 @@
 local EspModule = {}
 
 function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
-	-- 1. ФУНКЦИЯ ЦВЕТА (Исправлена, принимает Player)
+	-- ЦВЕТ
 	local function GetEspColor(Player, StaticColor)
 		if Toggles.GlobalRainbow and Toggles.GlobalRainbow.Value then 
 			return Color3.fromHSV(tick() % 5 / 5, 1, 1) 
@@ -11,9 +11,9 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 		end
 		
 		local Mode = Options.GlobalMode.Value
-		if Mode == 'Team Color' then 
+		if Mode == "Team Color" then 
 			return Player.TeamColor.Color
-		elseif Mode == 'Friend/Enemy' then 
+		elseif Mode == "Friend/Enemy" then 
 			if Player.Team == LP.Team then
 				return Options.FriendCol.Value
 			else
@@ -41,7 +41,6 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 		data.Highlight.Enabled = false
 		if data.Corners then for _, l in pairs(data.Corners) do l.Visible = false end end
 
-		-- 2. ГЛАВНАЯ ПРОВЕРКА
 		if not Toggles.EspEnabled or not Toggles.EspEnabled.Value then continue end
 
 		if Char and Hum and Hum.Health > 0 then
@@ -51,13 +50,11 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 			if Root then
 				local Pos, OnS = Camera:WorldToViewportPoint(Root.Position)
 				
-				-- ЗАЩИТА ОТ ДЕЛЕНИЯ НА НОЛЬ (Fix "Box only on one person")
 				if OnS and Pos.Z > 1 then 
 					local SX = 2000 / Pos.Z
 					local SY = 3000 / Pos.Z
 					local BPos = Vector2.new(Pos.X - SX/2, Pos.Y - SY/2)
 					
-					-- ОПРЕДЕЛЕНИЕ ЦВЕТА
 					local Color = IsSelf and (Options.SelfBoxCol and Options.SelfBoxCol.Value or Color3.new(1,1,1)) 
 								or GetEspColor(Player, Options.BoxColor.Value)
 					
@@ -66,7 +63,7 @@ function EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 					-- BOX
 					if Toggles.BoxEnabled and Toggles.BoxEnabled.Value then
 						if not IsSelf or (IsSelf and Toggles.SelfBox and Toggles.SelfBox.Value) then
-							if Options.BoxStyle and Options.BoxStyle.Value == 'Corners' and data.Corners then
+							if Options.BoxStyle and Options.BoxStyle.Value == "Corners" and data.Corners then
 								local LineLen = SX / 4 -- длина
 								local Corners = data.Corners
 								-- Top Left
