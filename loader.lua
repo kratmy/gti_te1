@@ -17,7 +17,7 @@ _G.SendNotify = function(sound, message, duration)
 	if sound then
 		local s = Instance.new("Sound")
 		s.SoundId = sound
-		s.Volume = 0.5
+		s.Volume = 2
 		s.Parent = game:GetService("SoundService")
 		s:Play()
 		s.Ended:Connect(function() s:Destroy() end)
