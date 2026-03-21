@@ -12,6 +12,7 @@ mt.__newindex = newcclosure(function(t, k, v)
     if not checkcaller() and t:IsA("Humanoid") then
         if k == "WalkSpeed" and _G.Toggles and _G.Toggles.EnableWS and _G.Toggles.EnableWS.Value then
 			print(_G.Toggles.EnableWS.Value)
+			print("оно вообще обновляется?")
             return
         elseif k == "JumpPower" and _G.Toggles and _G.Toggles.EnableJP and _G.Toggles.EnableJP.Value then
             return
