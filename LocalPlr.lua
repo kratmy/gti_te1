@@ -1,6 +1,7 @@
 local LocalPlrModule = {}
 
 local Initialized = false
+local InitializedAfterDisable = false
 local GameWS = 16
 local GameJP = 50
 
