@@ -3,7 +3,7 @@ local AimlockModule = {}
 local LockedTarget = nil
 
 function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
-	local function IsVisible(Part, Char)
+local function IsVisible(Part, Char)
 		if not Toggles.WallCheck or not Toggles.WallCheck.Value then 
 			return true 
 		end
@@ -12,41 +12,47 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 		local RayDirection = (Part.Position - RayOrigin)
 		
 		local Params = RaycastParams.new()
-
 		Params.FilterType = Enum.RaycastFilterType.Exclude
-		Params.FilterDescendantsInstances = {LP.Character, Char, Camera}
+		
+		local IgnoreList = {LP.Character, Camera}
+		for _, p in pairs(Players:GetPlayers()) do
+			if p.Character and p.Character ~= Char then
+				table.insert(IgnoreList, p.Character)
+			end
+		end
+
+		Params.FilterDescendantsInstances = IgnoreList
 		Params.IgnoreWater = true
 
 		local Res = workspace:Raycast(RayOrigin, RayDirection, Params)
 		
-		if not Res then
+		if not Res or Res.Instance:IsDescendantOf(Char) then
 			return true
 		end
 		
-		return Res.Instance:IsDescendantOf(Char)
+		return false
 	end
 
 	local AimKey = "MB2"
 	if Options and Options.AimKeybind then
-    	AimKey = Options.AimKeybind.Value
+		AimKey = Options.AimKeybind.Value
 	end
 	
 	local IsPressed = false
 	if AimKey == "MB2" then
-	    IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
+		IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton2)
 	elseif AimKey == "MB1" then
-	    IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
+		IsPressed = UIS:IsMouseButtonPressed(Enum.UserInputType.MouseButton1)
 	else
-	    local success, keyEnum = pcall(function() return Enum.KeyCode[AimKey] end)
+		local success, keyEnum = pcall(function() return Enum.KeyCode[AimKey] end)
 		if success then
 			IsPressed = UIS:IsKeyDown(keyEnum)
 		end
 	end
 	
 	if Toggles.AimEnabled and Toggles.AimEnabled.Value and IsPressed then
-		-- Если у нас уже есть цель, проверяем, жива ли она еще
 		if LockedTarget then
-		  local Char = LockedTarget.Character
+		local Char = LockedTarget.Character
 			local Hum = Char and Char:FindFirstChildOfClass("Humanoid")
 			local Part = Char and Char:FindFirstChild(Options.AimPart.Value)
 			local isAlive = true
@@ -66,7 +72,6 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 				end
 			end
 			
-			-- Если цели нет, ищем новую
 			if not LockedTarget then
 				local Closest = Options.FOVRadius.Value
 				local MousePos = UIS:GetMouseLocation()
@@ -94,7 +99,6 @@ function AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
 				end	
 			end
 
-			-- Если цель зафиксирована (старая или новая), наводимся
 			if LockedTarget then 
 				local TargetPart = LockedTarget.Character[Options.AimPart.Value]
 				local LookAt = CFrame.new(Camera.CFrame.Position, TargetPart.Position)
