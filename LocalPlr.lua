@@ -13,28 +13,29 @@ mt.__newindex = newcclosure(function(t, k, v)
     if not checkcaller() and t:IsA("Humanoid") then
         local toggles = _G.Toggles
         
-        -- Если таблицы нет или чит выключен — ПРОПУСКАЕМ СРАЗУ
-        if not toggles then return oldNewIndex(t, k, v) end
-
-    -- [[ WalkSpeed ]]
-    if Toggles.EnableWS and Toggles.EnableWS.Value then
-        -- Чит включен: жестко держим скорость из слайдера
-        Hum.WalkSpeed = Options.WalkSpeedSlider.Value
-        InitializedAfterDisable = false -- Сбрасываем метку
-    else
-        -- Чит выключен:
-        if not InitializedAfterDisable then
-            -- Возвращаем дефолт ТОЛЬКО ОДИН РАЗ после выключения галки
-            Hum.WalkSpeed = GameWS
-            InitializedAfterDisable = true 
-            print("Чит выключен, скорость возвращена к дефолту. Теперь игра управляет сама.")
+        if k == "WalkSpeed" then
+            -- Если чит ВКЛЮЧЕН, мы просто НЕ выполняем запись, но возвращаем оригинал
+            if toggles and toggles.EnableWS and toggles.EnableWS.Value then
+                -- Если игра пытается поставить дефолт, разрешаем, чтобы не ломать логику
+                if math.floor(v) == math.floor(GameWS) then 
+                    return oldNewIndex(t, k, v) 
+                end
+                -- В остальных случаях имитируем успех для игры, но ничего не меняем
+                return oldNewIndex(t, k, t.WalkSpeed) 
+            end
+        elseif k == "JumpPower" then
+            if toggles and toggles.EnableJP and toggles.EnableJP.Value then
+                if math.floor(v) == math.floor(GameJP) then 
+                    return oldNewIndex(t, k, v) 
+                end
+                return oldNewIndex(t, k, t.JumpPower)
+            end
         end
-        -- Больше никакого кода здесь нет. Скрипт просто игнорирует WalkSpeed,
-        -- и игра может спокойно ставить тебе 20, 25 или 100 для бега.
     end
-    end
+    -- Это самая важная строка, она должна выполняться ВСЕГДА
     return oldNewIndex(t, k, v)
-end)
+end))
+
 setreadonly(mt, true)
 
 function LocalPlrModule.Run(Options, Toggles, LP)
