@@ -264,4 +264,6 @@ Library.AccentColor = Color3.fromRGB(222, 0, 0)
 task.defer(function()
     _G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 5)
 end)
+wait(5)
+_G.SendNotify(_G.NotifySound1, "lunarisV9: Ready 2", 7)
 
