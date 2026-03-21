@@ -14,7 +14,7 @@ local DefaultFOV = workspace.CurrentCamera.FieldOfView
 _G.Library = Library
 
 local Window = Library:CreateWindow({
-	Title = PrntVer .. "lunarisV10.lua",
+	Title = PrntVer .. ".lua",
 	Center = true,
 	AutoShow = true,
 })
