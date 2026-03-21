@@ -261,6 +261,7 @@ SaveManager:LoadAutoloadConfig()
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 
 
+task.defer(function()
+    _G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 5)
+end)
 
-
-_G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 7)
