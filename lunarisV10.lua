@@ -5,7 +5,7 @@ local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))(
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
 
-local LibLibRepo = "https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/"
+local LibRepo = "https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/"
 local Library = loadstring(game:HttpGet(LibRepo .. "Library.lua"))()
 local ThemeManager = loadstring(game:HttpGet(LibRepo .. "addons/ThemeManager.lua"))()
 local SaveManager = loadstring(game:HttpGet(LibRepo .. "addons/SaveManager.lua"))()
