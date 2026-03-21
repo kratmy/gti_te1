@@ -15,21 +15,22 @@ mt.__newindex = newcclosure(function(t, k, v)
         -- Если таблицы нет или чит выключен — ПРОПУСКАЕМ СРАЗУ
         if not toggles then return oldNewIndex(t, k, v) end
 
-        if k == "WalkSpeed" then
-            -- Если галка выключена, сразу даем игре доступ
-            if not toggles.EnableWS or toggles.EnableWS.Value == false then
-                return oldNewIndex(t, k, v)
-            end
-            -- Если галка включена, разрешаем только дефолт
-            if v == GameWS then return oldNewIndex(t, k, v) end
-            return -- БЛОКИРОВКА
-        elseif k == "JumpPower" then
-            if not toggles.EnableJP or toggles.EnableJP.Value == false then
-                return oldNewIndex(t, k, v)
-            end
-            if v == GameJP then return oldNewIndex(t, k, v) end
-            return -- БЛОКИРОВКА
+    -- [[ WalkSpeed ]]
+    if Toggles.EnableWS and Toggles.EnableWS.Value then
+        -- Чит включен: жестко держим скорость из слайдера
+        Hum.WalkSpeed = Options.WalkSpeedSlider.Value
+        InitializedAfterDisable = false -- Сбрасываем метку
+    else
+        -- Чит выключен:
+        if not InitializedAfterDisable then
+            -- Возвращаем дефолт ТОЛЬКО ОДИН РАЗ после выключения галки
+            Hum.WalkSpeed = GameWS
+            InitializedAfterDisable = true 
+            print("Чит выключен, скорость возвращена к дефолту. Теперь игра управляет сама.")
         end
+        -- Больше никакого кода здесь нет. Скрипт просто игнорирует WalkSpeed,
+        -- и игра может спокойно ставить тебе 20, 25 или 100 для бега.
+    end
     end
     return oldNewIndex(t, k, v)
 end)
