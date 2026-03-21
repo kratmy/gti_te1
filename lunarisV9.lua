@@ -263,9 +263,10 @@ SaveManager:LoadAutoloadConfig()
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
 
 
-Library:Notify("Тест прямой отправки", 5) 
 
 task.spawn(function()
     _G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 5)
+	wait(1)
+	Library:Notify("Тест прямой отправки", 5) 
 end)
 
