@@ -78,9 +78,9 @@ function LocalPlrModule.Unload(Options)
 	
 	setreadonly(mt, true)
 	
-	if Initialized then
+	--[[if Initialized then
 		LocalPlrModule.Reset(Options)
-	end
+	end]]
 	
 	--метки изгоя убрать надо
 	Initialized = false
