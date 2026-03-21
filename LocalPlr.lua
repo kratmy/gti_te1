@@ -35,7 +35,7 @@ function LocalPlrModule.Run(Options, Toggles, LP)
 		-- [[ WalkSpeed ]]
 		if Toggles.EnableWS and Toggles.EnableWS.Value then
 			Hum.WalkSpeed = Options.WalkSpeedSlider.Value
-		else
+		elseif Hum.WalkSpeed ~= GameWS then
 			Hum.WalkSpeed = GameWS
 		end
 		
