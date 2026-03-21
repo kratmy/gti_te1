@@ -59,10 +59,10 @@ local function IsVisible(Part, Char)
 				
 			local visible = IsVisible(Part, Char)
 				if not visible and Toggles.WallCheck and Toggles.WallCheck.Value then
-					isAlive = false -- Просто используем этот триггер для сброса
+					isAlive = false
 				end
 				
-				-- Проверка: жив ли игрок, если включен Alive Check
+				-- alive check
 				if Toggles.AliveCheck and Toggles.AliveCheck.Value and Hum then
 					if Hum.Health <= 0 then isAlive = false end
 				end
@@ -106,7 +106,7 @@ local function IsVisible(Part, Char)
 			end
 		
 		else
-			LockedTarget = nil -- Сбрасываем цель, когда отпускаем кнопку
+			LockedTarget = nil
 		end
 end
 
