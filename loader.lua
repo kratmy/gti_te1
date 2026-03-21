@@ -4,7 +4,8 @@ local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local actualUrls = {
 	main   = "lunarisV10.lua",
 	aim    = "aim2.lua",
-	esp    = "esp3.lua"
+	esp    = "esp3.lua",
+	lp     = "LocalPlr.lua"
 }
 
 
