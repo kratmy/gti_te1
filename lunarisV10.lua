@@ -12,7 +12,7 @@ local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
 local DefaultFOV = workspace.CurrentCamera.FieldOfView
 
 local Window = Library:CreateWindow({
-	Title = 'lunarisV9.lua',
+	Title = 'lunarisV10.lua',
 	Center = true,
 	AutoShow = true,
 })
@@ -264,5 +264,6 @@ Library.AccentColor = Color3.fromRGB(222, 0, 0)
 
 
 task.defer(function()
-    _G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 5)
+	_G.SendNotify(_G.NotifySound1, "lunarisV10: Ready!", 5)
 end)
+
