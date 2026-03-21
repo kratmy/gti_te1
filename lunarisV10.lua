@@ -103,17 +103,17 @@ CameraSettings:AddToggle("ExtendFOV", {
 	end
 })
 CameraSettings:AddSlider("PlayerFOV", { 
-    Text = "Field of View", 
-    Default = 70, 
-    Min = 30, 
-    Max = 120, 
-    Rounding = 0, 
-    Callback = function(Value) 
-        -- Меняем FOV только если включена основная галочка
-        if Toggles.ExtendFOV and Toggles.ExtendFOV.Value then
-            workspace.CurrentCamera.FieldOfView = Value 
-        end
-    end 
+	Text = "Field of View", 
+	Default = 70, 
+	Min = 30, 
+	Max = 120, 
+	Rounding = 0, 
+	Callback = function(Value) 
+		-- Меняем FOV только если включена основная галочка
+		if Toggles.ExtendFOV and Toggles.ExtendFOV.Value then
+			workspace.CurrentCamera.FieldOfView = Value 
+		end
+	end 
 })
 
 SelfEspGroup:AddToggle("SelfEspEnabled", { Text = "Enable Self ESP", Default = false })
@@ -154,6 +154,10 @@ local MainRenderLoop = nil
 
 -- [[ ФУНКЦИЯ ВЫГРУЗКИ ]]
 local function Unload()
+	if LocalPlrModule and LocalPlrModule.Unload then
+		LocalPlrModule.Unload(Options)
+	end
+	
 	if workspace.CurrentCamera and DefaultFOV then
 		workspace.CurrentCamera.FieldOfView = DefaultFOV
 	end
