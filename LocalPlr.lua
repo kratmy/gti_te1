@@ -1,7 +1,7 @@
 local LocalPlrModule = {}
 
 local Initialized = false
-local InitializedAfterDisable = false
+local InitializedAfterDisable = false -- Метка для однократного возврата скорости
 local GameWS = 16
 local GameJP = 50
 
@@ -14,13 +14,11 @@ mt.__newindex = newcclosure(function(t, k, v)
         local toggles = _G.Toggles
         
         if k == "WalkSpeed" then
-            -- Если чит ВКЛЮЧЕН, мы просто НЕ выполняем запись, но возвращаем оригинал
             if toggles and toggles.EnableWS and toggles.EnableWS.Value then
-                -- Если игра пытается поставить дефолт, разрешаем, чтобы не ломать логику
                 if math.floor(v) == math.floor(GameWS) then 
                     return oldNewIndex(t, k, v) 
                 end
-                -- В остальных случаях имитируем успех для игры, но ничего не меняем
+                -- Возвращаем текущую скорость, чтобы не крашить ControlModule игры
                 return oldNewIndex(t, k, t.WalkSpeed) 
             end
         elseif k == "JumpPower" then
@@ -32,9 +30,8 @@ mt.__newindex = newcclosure(function(t, k, v)
             end
         end
     end
-    -- Это самая важная строка, она должна выполняться ВСЕГДА
     return oldNewIndex(t, k, v)
-end))
+end) -- Исправлено: убрана лишняя скобка )
 
 setreadonly(mt, true)
 
@@ -52,11 +49,14 @@ function LocalPlrModule.Run(Options, Toggles, LP)
         -- [[ WalkSpeed ]]
         if Toggles.EnableWS and Toggles.EnableWS.Value then
             Hum.WalkSpeed = Options.WalkSpeedSlider.Value
+            InitializedAfterDisable = false -- Сбрасываем метку, когда чит включен
         else
-            -- Возвращаем дефолт ОДИН РАЗ (проверка math.floor убирает микро-отклонения)
-            if math.floor(Hum.WalkSpeed) ~= math.floor(GameWS) then
+            -- Возвращаем дефолт ТОЛЬКО ОДИН РАЗ после выключения
+            if not InitializedAfterDisable then
                 Hum.WalkSpeed = GameWS
+                InitializedAfterDisable = true
             end
+            -- Теперь, когда InitializedAfterDisable = true, этот блок больше не мешает игре менять скорость
         end
         
         -- [[ JumpPower ]]
