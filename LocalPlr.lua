@@ -35,11 +35,14 @@ function LocalPlrModule.Run(Options, Toggles, LP)
 
 		-- [[ WalkSpeed ]]
 		if Toggles.EnableWS and Toggles.EnableWS.Value then
-			Hum.WalkSpeed = Options.WalkSpeedSlider.Value
-		if math.floor(Hum.WalkSpeed) ~= math.floor(GameWS) then
-        	Hum.WalkSpeed = GameWS
-        	print("Скрипт вернул дефолтную скорость и замолчал.")
-  		end
+            Hum.WalkSpeed = Options.WalkSpeedSlider.Value
+        else
+            -- Если чит ВЫКЛЮЧЕН, возвращаем дефолт ОДИН РАЗ
+            if math.floor(Hum.WalkSpeed) ~= math.floor(GameWS) then
+                Hum.WalkSpeed = GameWS
+                print("Скорость возвращена к дефолту: " .. GameWS)
+            end
+        end
 		
 		-- [[ JumpPower ]]
 		if Toggles.EnableJP and Toggles.EnableJP.Value then
