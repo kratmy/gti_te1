@@ -10,10 +10,31 @@ setreadonly(mt, false)
 
 mt.__newindex = newcclosure(function(t, k, v)
     if not checkcaller() and t:IsA("Humanoid") then
-        if k == "WalkSpeed" and _G.Toggles and _G.Toggles.EnableWS and _G.Toggles.EnableWS.Value == true then
-            if v == GameWS then return oldNewIndex(t, k, v) end 
+        -- 1. Сначала ПРОВЕРЯЕМ, существует ли вообще таблица тюнеров
+        local toggles = _G.Toggles
+        if not toggles then return oldNewIndex(t, k, v) end
+
+        -- 2. Проверка скорости
+        if k == "WalkSpeed" then
+            -- Если галка ВЫКЛЮЧЕНА — вообще ничего не делаем, пропускаем игру
+            if not toggles.EnableWS or toggles.EnableWS.Value == false then
+                return oldNewIndex(t, k, v)
+            end
+            
+            -- Если галка ВКЛЮЧЕНА, но игра ставит дефолт — пропускаем
+            if v == GameWS then 
+                return oldNewIndex(t, k, v) 
+            end
+            
+            -- В ОСТАЛЬНЫХ СЛУЧАЯХ (когда чит включен и игра хочет свою скорость) — БЛОКИРУЕМ
             return 
-        elseif k == "JumpPower" and _G.Toggles and _G.Toggles.EnableJP and _G.Toggles.EnableJP.Value == true then
+        end
+
+        -- 3. Проверка прыжка (аналогично)
+        if k == "JumpPower" then
+            if not toggles.EnableJP or toggles.EnableJP.Value == false then
+                return oldNewIndex(t, k, v)
+            end
             if v == GameJP then return oldNewIndex(t, k, v) end
             return 
         end
