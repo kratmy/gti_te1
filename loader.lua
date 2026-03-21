@@ -2,9 +2,9 @@
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 
 local actualUrls = {
-	main   = "lunarisV9.lua",
+	main   = "lunarisV10.lua",
 	aim    = "aim2.lua",
-	esp    = "esp2.lua"
+	esp    = "esp3.lua"
 }
 
 
@@ -17,7 +17,7 @@ _G.SendNotify = function(sound, message, duration)
 	if sound then
 		local s = Instance.new("Sound")
 		s.SoundId = sound
-		s.Volume = 2
+		s.Volume = 0.5
 		s.Parent = game:GetService("SoundService")
 		s:Play()
 		s.Ended:Connect(function() s:Destroy() end)
