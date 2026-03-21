@@ -17,8 +17,6 @@ local Window = Library:CreateWindow({
 	AutoShow = true,
 })
 
-_G.Library = Library
-
 local Tabs = {
 	Main = Window:AddTab('AimLock'),
 	Visuals = Window:AddTab('Visuals'),
@@ -264,9 +262,5 @@ Library.AccentColor = Color3.fromRGB(222, 0, 0)
 
 
 
-task.spawn(function()
-    _G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 5)
-	wait(1)
-	Library:Notify("Тест прямой отправки", 5) 
-end)
 
+_G.SendNotify(_G.NotifySound1, "lunarisV9: Ready!", 7)
