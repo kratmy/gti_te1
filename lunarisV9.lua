@@ -270,7 +270,7 @@ task.spawn(function()
 end) ]]
 
 
-Library.AccentColor = Color3.fromHex("d70000")
+
 --[[ Library:UpdateColorsUsingRegistry()
 
 -task.spawn(function()
@@ -281,6 +281,7 @@ Library.AccentColor = Color3.fromHex("d70000")
 end)  ]]
 
 SaveManager:LoadAutoloadConfig()
+Library.AccentColor = Color3.fromHex("d70000")
 
 
 
