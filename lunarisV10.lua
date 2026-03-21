@@ -1,90 +1,89 @@
-local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
---local files = _G.LunarisSettings
+local PrntVer = "lunarisV10"
 
+local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
 
-local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/'
-local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
-local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
-local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
 local DefaultFOV = workspace.CurrentCamera.FieldOfView
+_G.Library = Library
 
 local Window = Library:CreateWindow({
-	Title = 'lunarisV10.lua',
+	Title = PrntVer .. "lunarisV10.lua",
 	Center = true,
 	AutoShow = true,
 })
 
-_G.Library = Library
 
 local Tabs = {
-	Main = Window:AddTab('AimLock'),
-	Visuals = Window:AddTab('Visuals'),
-	Misc = Window:AddTab('Misc'),
-	['UI Settings'] = Window:AddTab('Settings'),
+	Main = Window:AddTab("AimLock"),
+	Visuals = Window:AddTab("Visuals"),
+	Misc = Window:AddTab("Misc"),
+	["UI Settings"] = Window:AddTab("Settings"),
 }
 
 -- [[ ГРУППЫ ИНТЕРФЕЙСА ]]
-local AimLeft = Tabs.Main:AddLeftGroupbox('AimLock')
-local AimRight = Tabs.Main:AddRightGroupbox('FOV & Checks')
+local AimLeft = Tabs.Main:AddLeftGroupbox("AimLock")
+local AimRight = Tabs.Main:AddRightGroupbox("FOV & Checks")
 
-local EspMain = Tabs.Visuals:AddLeftGroupbox('Visuals')
-local EspColors = Tabs.Visuals:AddLeftGroupbox('Colors (Friend/Enemy)')
-local EspBoxes = Tabs.Visuals:AddRightGroupbox('Boxes & HP')
-local EspText = Tabs.Visuals:AddRightGroupbox('Text Settings')
-local EspDetails = Tabs.Visuals:AddRightGroupbox('Extra Visuals')
-local CameraSettings = Tabs.Visuals:AddRightGroupbox('Camera')
-local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox('Self Visuals')
+local EspMain = Tabs.Visuals:AddLeftGroupbox("Visuals")
+local EspColors = Tabs.Visuals:AddLeftGroupbox("Colors (Friend/Enemy)")
+local EspBoxes = Tabs.Visuals:AddRightGroupbox("Boxes & HP")
+local EspText = Tabs.Visuals:AddRightGroupbox("Text Settings")
+local EspDetails = Tabs.Visuals:AddRightGroupbox("Extra Visuals")
+local CameraSettings = Tabs.Visuals:AddRightGroupbox("Camera")
+local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox("Self Visuals")
 
-local MiscGroup = Tabs.Misc:AddLeftGroupbox('Menu Management')
+local MiscGroup = Tabs.Misc:AddLeftGroupbox("Menu Management")
 
 -- [[ НАПОЛНЕНИЕ AIMLOCK ]]
-AimLeft:AddToggle('AimEnabled', { Text = 'Enabled', Default = false })
-AimLeft:AddLabel('Aim keybind'):AddKeyPicker('AimKeybind', {
-	Default = 'MB2',
+AimLeft:AddToggle("AimEnabled", { Text = "Enabled", Default = false })
+AimLeft:AddLabel("Aim keybind"):AddKeyPicker("AimKeybind", {
+	Default = "MB2",
 	SyncToggleState = false,
-	Mode = 'Hold',
-	Text = 'Aimlock Keybind',
+	Mode = "Hold",
+	Text = "Aimlock Keybind",
 	NoUI = false
 })
-AimLeft:AddSlider('AimSmooth', { Text = 'Smoothness', Default = 0.7, Min = 0.01, Max = 1, Rounding = 2 })
-AimLeft:AddDropdown('AimPart', { Values = { 'Head', 'UpperTorso', 'HumanoidRootPart' }, Default = 1, Text = 'Target Bone' })
+AimLeft:AddSlider("AimSmooth", { Text = "Smoothness", Default = 0.7, Min = 0.01, Max = 1, Rounding = 2 })
+AimLeft:AddDropdown("AimPart", { Values = { "Head", "UpperTorso", "HumanoidRootPart" }, Default = 1, Text = "Target Bone" })
 
-AimRight:AddToggle('ShowFOV', { Text = 'Show FOV Circle', Default = false }):AddColorPicker('FOVColor', { Default = Color3.fromRGB(255, 255, 255) })
-AimRight:AddSlider('FOVRadius', { Text = 'Radius', Default = 150, Min = 10, Max = 800, Rounding = 0 })
-AimRight:AddToggle('RainbowFOV', { Text = 'Rainbow FOV', Default = false })
-AimRight:AddToggle('WallCheck', { Text = 'Wall Check', Default = false })
-AimRight:AddToggle('AliveCheck', { Text = 'Alive Check', Default = true })
+AimRight:AddToggle("ShowFOV", { Text = "Show FOV Circle", Default = false }):AddColorPicker("FOVColor", { Default = Color3.fromRGB(255, 255, 255) })
+AimRight:AddSlider("FOVRadius", { Text = "Radius", Default = 150, Min = 10, Max = 800, Rounding = 0 })
+AimRight:AddToggle("RainbowFOV", { Text = "Rainbow FOV", Default = false })
+AimRight:AddToggle("WallCheck", { Text = "Wall Check", Default = false })
+AimRight:AddToggle("AliveCheck", { Text = "Alive Check", Default = true })
 
 -- [[ НАПОЛНЕНИЕ VISUALS ]]
-EspMain:AddToggle('EspEnabled', { Text = 'Enabled', Default = false })
-EspMain:AddDropdown('GlobalMode', { Values = { 'Static', 'Team Color', 'Friend/Enemy' }, Default = 1, Text = 'Color Mode' })
-EspMain:AddToggle('GlobalRainbow', { Text = 'Global Rainbow ESP', Default = false })
+EspMain:AddToggle("EspEnabled", { Text = "Enabled", Default = false })
+EspMain:AddDropdown("GlobalMode", { Values = { "Static", "Team Color", "Friend/Enemy" }, Default = 1, Text = "Color Mode" })
+EspMain:AddToggle("GlobalRainbow", { Text = "Global Rainbow ESP", Default = false })
 
-EspColors:AddLabel('Friend Color'):AddColorPicker('FriendCol', { Default = Color3.fromRGB(0, 255, 0) })
-EspColors:AddLabel('Enemy Color'):AddColorPicker('EnemyCol', { Default = Color3.fromRGB(222, 0, 0) })
+EspColors:AddLabel("Friend Color"):AddColorPicker("FriendCol", { Default = Color3.fromRGB(0, 255, 0) })
+EspColors:AddLabel("Enemy Color"):AddColorPicker("EnemyCol", { Default = Color3.fromRGB(222, 0, 0) })
 
-EspBoxes:AddToggle('BoxEnabled', { Text = 'Draw Boxes', Default = false }):AddColorPicker('BoxColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspBoxes:AddToggle('HealthBar', { Text = 'Health Bar', Default = false })
-EspBoxes:AddDropdown('BoxStyle', { Values = { 'Full', 'Corners' }, Default = 1, Text = 'Box Style' })
-EspBoxes:AddSlider('BoxThickness', { Text = 'Thickness', Default = 1, Min = 1, Max = 5, Rounding = 0 })
-EspBoxes:AddDropdown('HealthBarSide', { Values = { 'Left', 'Right', 'Bottom' }, Default = 1, Text = 'HP Bar Side' })
-EspBoxes:AddToggle('HPBarOutline', { Text = 'HP Bar Outline', Default = true })
+EspBoxes:AddToggle("BoxEnabled", { Text = "Draw Boxes", Default = false }):AddColorPicker("BoxColor", { Default = Color3.fromRGB(255, 255, 255) })
+EspBoxes:AddToggle("HealthBar", { Text = "Health Bar", Default = false })
+EspBoxes:AddDropdown("BoxStyle", { Values = { "Full", "Corners" }, Default = 1, Text = "Box Style" })
+EspBoxes:AddSlider("BoxThickness", { Text = "Thickness", Default = 1, Min = 1, Max = 5, Rounding = 0 })
+EspBoxes:AddDropdown("HealthBarSide", { Values = { "Left", "Right", "Bottom" }, Default = 1, Text = "HP Bar Side" })
+EspBoxes:AddToggle("HPBarOutline", { Text = "HP Bar Outline", Default = true })
 
-EspText:AddToggle('ShowName', { Text = 'Show Names', Default = false })
-EspText:AddToggle('ShowDist', { Text = 'Show Distance', Default = false })
-EspText:AddToggle('ShowHPText', { Text = 'Show HP Text', Default = false })
+EspText:AddToggle("ShowName", { Text = "Show Names", Default = false })
+EspText:AddToggle("ShowDist", { Text = "Show Distance", Default = false })
+EspText:AddToggle("ShowHPText", { Text = "Show HP Text", Default = false })
 
-EspDetails:AddToggle('ChamsEnabled', { Text = 'Chams (Highlights)', Default = false }):AddColorPicker('ChamsColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspDetails:AddSlider('ChamsTransp', { Text = 'Transparency', Default = 0.5, Min = 0, Max = 1, Rounding = 1 })
-EspDetails:AddToggle('TracerEnabled', { Text = 'Tracers', Default = false }):AddColorPicker('TracerColor', { Default = Color3.fromRGB(255, 255, 255) })
-EspDetails:AddDropdown('TracerOrigin', { Values = { 'Bottom', 'Center', 'Top', 'Mouse' }, Default = 1, Text = 'Origin' })
-EspDetails:AddDropdown('TracerTarget', { Values = { 'Head', 'HumanoidRootPart' }, Default = 2, Text = 'Tracer Target' })
+EspDetails:AddToggle("ChamsEnabled", { Text = "Chams (Highlights)", Default = false }):AddColorPicker("ChamsColor", { Default = Color3.fromRGB(255, 255, 255) })
+EspDetails:AddSlider("ChamsTransp", { Text = "Transparency", Default = 0.5, Min = 0, Max = 1, Rounding = 1 })
+EspDetails:AddToggle("TracerEnabled", { Text = "Tracers", Default = false }):AddColorPicker("TracerColor", { Default = Color3.fromRGB(255, 255, 255) })
+EspDetails:AddDropdown("TracerOrigin", { Values = { "Bottom", "Center", "Top", "Mouse" }, Default = 1, Text = "Origin" })
+EspDetails:AddDropdown("TracerTarget", { Values = { "Head", "HumanoidRootPart" }, Default = 2, Text = "Tracer Target" })
 
-CameraSettings:AddToggle('ExtendFOV', {
-	Text = 'Enable Custom FOV',
+CameraSettings:AddToggle("ExtendFOV", {
+	Text = "Enable Custom FOV",
 	Default = false,
 	Callback = function(Value)
 		local Camera = workspace.CurrentCamera
@@ -97,14 +96,14 @@ CameraSettings:AddToggle('ExtendFOV', {
 		end
 	end
 })
-CameraSettings:AddSlider('PlayerFOV', { Text = 'Field of View', Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
+CameraSettings:AddSlider("PlayerFOV", { Text = "Field of View", Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
 
 -- [[ НАПОЛНЕНИЕ SELFESP ]]
-SelfEspGroup:AddToggle('SelfEspEnabled', { Text = 'Enable Self ESP', Default = false })
-SelfEspGroup:AddToggle('SelfChams', { Text = 'Self Chams', Default = false })
-SelfEspGroup:AddToggle('SelfTracers', { Text = 'Self Tracers', Default = false })
-SelfEspGroup:AddToggle('SelfBox', { Text = 'Self Box', Default = false })
-SelfEspGroup:AddToggle('SelfText', { Text = 'Self Name & Dist', Default = false })
+SelfEspGroup:AddToggle("SelfEspEnabled", { Text = "Enable Self ESP", Default = false })
+SelfEspGroup:AddToggle("SelfChams", { Text = "Self Chams", Default = false })
+SelfEspGroup:AddToggle("SelfTracers", { Text = "Self Tracers", Default = false })
+SelfEspGroup:AddToggle("SelfBox", { Text = "Self Box", Default = false })
+SelfEspGroup:AddToggle("SelfText", { Text = "Self Name & Dist", Default = false })
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
@@ -157,8 +156,8 @@ local function Unload()
 	Library:Unload()
 end
 
-MiscGroup:AddButton('Unload Script', Unload)
-MiscGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'RightControl', NoUI = true, Text = 'Menu keybind' })
+MiscGroup:AddButton("Unload Script", Unload)
+MiscGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightControl", NoUI = true, Text = "Menu keybind" })
 Library.ToggleKeybind = Options.MenuKeybind
 
 -- [[ ЛОГИКА ОБЪЕКТОВ ESP ]]
@@ -250,14 +249,14 @@ end)
 
 -- [[ МЕНЕДЖЕРЫ ]]
 ThemeManager:SetLibrary(Library)
-ThemeManager:SetFolder('lunaris')
-ThemeManager:ApplyToTab(Tabs['UI Settings'])
+ThemeManager:SetFolder("lunaris")
+ThemeManager:ApplyToTab(Tabs["UI Settings"])
 SaveManager:SetLibrary(Library)
-SaveManager:SetFolder('lunaris/configs')
-SaveManager:BuildConfigSection(Tabs['UI Settings'])
+SaveManager:SetFolder("lunaris/configs")
+SaveManager:BuildConfigSection(Tabs["UI Settings"])
 
 --игнор бинда меню
-SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
 
 SaveManager:LoadAutoloadConfig()
 Library.AccentColor = Color3.fromRGB(222, 0, 0)
