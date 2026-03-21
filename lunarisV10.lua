@@ -130,6 +130,9 @@ local Camera = workspace.CurrentCamera
 local Objects = {}
 local Connections = {}
 
+_G.Toggles = Toggles
+_G.Options = Options
+
 local FOV = Drawing.new("Circle")
 FOV.Thickness = 1
 FOV.NumSides = 64
