@@ -17,14 +17,14 @@ _G.SendNotify = function(sound, message, duration)
 	if sound then
 		local s = Instance.new("Sound")
 		s.SoundId = sound
-		s.Volume = 0.5
+		s.Volume = 2
 		s.Parent = game:GetService("SoundService")
 		s:Play()
 		s.Ended:Connect(function() s:Destroy() end)
 	end
 	
 	if _G.Library then
-		_G.Library:Notify(message or "Уведомление", duration or 5)
+		_G.Library:Notify(message or "failed to load", duration or 5)
 	end
 end
 
@@ -44,5 +44,5 @@ if success then
 		end
 	end
 else
-	warn("ГИТХАБ НЕ ОТВЕТИЛ")
+	warn("ГИТХАБ СПИТ")
 end
