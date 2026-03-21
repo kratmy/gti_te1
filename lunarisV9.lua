@@ -17,6 +17,8 @@ local Window = Library:CreateWindow({
 	AutoShow = true,
 })
 
+_G.Library = Library
+
 local Tabs = {
 	Main = Window:AddTab('AimLock'),
 	Visuals = Window:AddTab('Visuals'),
