@@ -3,6 +3,7 @@ local PrntVer = "lunarisV10"
 local baseUrl = "https://raw.githubusercontent.com/kratmy/gti_te1/main/"
 local AimlockModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.aim))()
 local EspModule = loadstring(game:HttpGet(baseUrl ..  _G.LunarisLoader.esp))()
+local LocalPlrModule = loadstring(game:HttpGet(baseUrl .. _G.LunarisLoader.lp))()
 
 
 local LibRepo = "https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/refs/heads/main/"
@@ -21,15 +22,16 @@ local Window = Library:CreateWindow({
 
 
 local Tabs = {
-	Main = Window:AddTab("AimLock"),
+	AimLockTab = Window:AddTab("AimLock"),
 	Visuals = Window:AddTab("Visuals"),
+	LocalPlrTab = Window:AddTab("LocalPlayer"),
 	Misc = Window:AddTab("Misc"),
 	["UI Settings"] = Window:AddTab("Settings"),
 }
 
 -- [[ ГРУППЫ ИНТЕРФЕЙСА ]]
-local AimLeft = Tabs.Main:AddLeftGroupbox("AimLock")
-local AimRight = Tabs.Main:AddRightGroupbox("FOV & Checks")
+local AimLeft = Tabs.AimLockTab:AddLeftGroupbox("AimLock")
+local AimRight = Tabs.AimLockTab:AddRightGroupbox("FOV & Checks")
 
 local EspMain = Tabs.Visuals:AddLeftGroupbox("Visuals")
 local EspColors = Tabs.Visuals:AddLeftGroupbox("Colors (Friend/Enemy)")
@@ -38,6 +40,8 @@ local EspText = Tabs.Visuals:AddRightGroupbox("Text Settings")
 local EspDetails = Tabs.Visuals:AddRightGroupbox("Extra Visuals")
 local CameraSettings = Tabs.Visuals:AddRightGroupbox("Camera")
 local SelfEspGroup = Tabs.Visuals:AddLeftGroupbox("Self Visuals")
+
+local MovementGroup = Tabs.LocalPlrTab:AddLeftGroupbox("Movement")
 
 local MiscGroup = Tabs.Misc:AddLeftGroupbox("Menu Management")
 
@@ -100,12 +104,22 @@ CameraSettings:AddToggle("ExtendFOV", {
 })
 CameraSettings:AddSlider("PlayerFOV", { Text = "Field of View", Default = 70, Min = 30, Max = 120, Rounding = 0, Callback = function(Value) workspace.CurrentCamera.FieldOfView = Value end })
 
--- [[ НАПОЛНЕНИЕ SELFESP ]]
 SelfEspGroup:AddToggle("SelfEspEnabled", { Text = "Enable Self ESP", Default = false })
 SelfEspGroup:AddToggle("SelfChams", { Text = "Self Chams", Default = false })
 SelfEspGroup:AddToggle("SelfTracers", { Text = "Self Tracers", Default = false })
 SelfEspGroup:AddToggle("SelfBox", { Text = "Self Box", Default = false })
 SelfEspGroup:AddToggle("SelfText", { Text = "Self Name & Dist", Default = false })
+
+-- [[ НАПОЛНЕНИЕ LOCAL PLAYER]]
+MovementGroup:AddToggle("EnableWS", { Text = "Enable Custom Speed", Default = false })
+MovementGroup:AddSlider("WalkSpeedSlider", { Text = "Walk Speed Value", Default = 16, Min = 0, Max = 250, Rounding = 0 })
+
+MovementGroup:AddDivider()
+
+MovementGroup:AddToggle("EnableJP", { Text = "Enable Custom Jump", Default = false })
+MovementGroup:AddSlider("JumpPowerSlider", { Text = "Jump Power Value", Default = 50, Min = 0, Max = 500, Rounding = 0 })
+
+MovementGroup:AddDivider()
 
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
@@ -238,14 +252,19 @@ MainRenderLoop = RS.RenderStepped:Connect(function()
 		end
 	end
 	
-	-- Вызов ESP модуля
+	-- вызов ESP модуля
 	if EspModule and EspModule.Run then
 		EspModule.Run(Objects, Toggles, Options, LP, Camera, UIS)
 	end
 	
-	-- Вызов Aimlock модуля
+	-- вызов Aimlock модуля
 	if AimlockModule and AimlockModule.Run then 
 		AimlockModule.Run(Options, Toggles, LP, Players, Camera, UIS)
+	end
+
+	-- вызов LocalPlr модуля
+	if LocalPlrModule and LocalPlrModule.Run then
+		LocalPlrModule.Run(Options, Toggles, LP)
 	end
 end)
 
