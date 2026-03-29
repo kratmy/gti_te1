@@ -133,6 +133,8 @@ MovementGroup:AddSlider("JumpPowerSlider", { Text = "Jump Power Value", Default 
 
 MovementGroup:AddDivider()
 
+MovementGroup:AddToggle("InfJump", { Text = "Infinite Jump", Default = false })
+
 -- [[ СИСТЕМНЫЕ ПЕРЕМЕННЫЕ ]]
 local Players = game:GetService("Players")
 local RS = game:GetService("RunService")
@@ -156,6 +158,11 @@ local MainRenderLoop = nil
 local function Unload()
 	if LocalPlrModule and LocalPlrModule.Unload then
 		LocalPlrModule.Unload(Options)
+	end
+	
+	if _G.JumpConn then
+		_G.JumpConn:Disconnect()
+		_G.JumpConn = nil
 	end
 	
 	if workspace.CurrentCamera and DefaultFOV then
