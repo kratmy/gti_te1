@@ -4,6 +4,7 @@ local Initialized = false
 local InitializedAfterDisable = false --метка изгоя
 local GameWS = 16
 local GameJP = 50
+local lastJ = 0
 
 local mt = getrawmetatable(game)
 local oldNewIndex = mt.__newindex
@@ -67,11 +68,15 @@ function LocalPlrModule.Run(Options, Toggles, LP)
 		end
 		-- [[ Infinite Jump ]]
 		if Toggles.InfJump and Toggles.InfJump.Value then
-						if not _G.JumpConn then
+			if not _G.JumpConn then
+				local lastJ = 0
 				_G.JumpConn = game:GetService("UserInputService").JumpRequest:Connect(function()
-					local Hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
-					if Hum then
-						Hum:ChangeState(Enum.HumanoidStateType.Jumping)
+					if tick() - lastJ > 0.18 then
+						local Hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+						if Hum then
+							Hum:ChangeState(Enum.HumanoidStateType.Jumping)
+							lastJ = tick()
+						end
 					end
 				end)
 			end
