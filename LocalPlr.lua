@@ -65,6 +65,22 @@ function LocalPlrModule.Run(Options, Toggles, LP)
 				Hum.JumpPower = GameJP
 			end
 		end
+		-- [[ Infinite Jump ]]
+		if Toggles.InfJump and Toggles.InfJump.Value then
+						if not _G.JumpConn then
+				_G.JumpConn = game:GetService("UserInputService").JumpRequest:Connect(function()
+					local Hum = LP.Character and LP.Character:FindFirstChildOfClass("Humanoid")
+					if Hum then
+						Hum:ChangeState(Enum.HumanoidStateType.Jumping)
+					end
+				end)
+			end
+		else
+			if _G.JumpConn then
+				_G.JumpConn:Disconnect()
+				_G.JumpConn = nil
+			end
+		end
 	end
 end
 
