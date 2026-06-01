@@ -151,6 +151,7 @@ local FOV = Drawing.new("Circle")
 FOV.Thickness = 1
 FOV.NumSides = 64
 FOV.Visible = false
+FOV.Filled = false
 
 local MainRenderLoop = nil
 
