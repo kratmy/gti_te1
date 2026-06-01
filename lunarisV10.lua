@@ -148,11 +148,9 @@ _G.Toggles = Toggles
 _G.Options = Options
 
 local FOV = Drawing.new("Circle")
-FOV.Thickness = 1
+FOV.Thickness = 2
 FOV.NumSides = 64
 FOV.Visible = false
-FOV.Filled = false
-FOV.Transparency = 1
 
 local MainRenderLoop = nil
 
